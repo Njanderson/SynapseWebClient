@@ -11,8 +11,6 @@ import com.google.inject.Inject;
 
 public class BookmarkWidgetViewImpl extends FlowPanel implements BookmarkWidgetView {
 	private Presenter presenter;
-	private String bookmarkID;
-	private String bookmarkLinkText;
 	
 	@Inject
 	public BookmarkWidgetViewImpl() {
@@ -26,8 +24,6 @@ public class BookmarkWidgetViewImpl extends FlowPanel implements BookmarkWidgetV
 	@Override
 	public void configure(final String bookmarkID, String bookmarkLinkText) {
 		this.clear();
-		this.bookmarkID = bookmarkID;
-		this.bookmarkLinkText = bookmarkLinkText;
 		
 		Anchor a = new Anchor();
 		a.setHTML(bookmarkLinkText);
