@@ -3,6 +3,7 @@ package org.sagebionetworks.web.client.presenter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.sagebionetworks.repo.model.EntityHeader;
 import org.sagebionetworks.repo.model.ProjectHeader;
@@ -304,16 +305,16 @@ public class ProfilePresenter extends AbstractActivity implements ProfileView.Pr
 		getMoreProjects();
 		
 		//initialize team filters
-		AsyncCallback<List<Team>> teamCallback = new AsyncCallback<List<Team>>() {
+		AsyncCallback<Map<Team, Long>> teamCallback = new AsyncCallback<Map<Team, Long>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				//could not load teams for team filters
 				view.setTeamsFilterVisible(false);
 			}
 			@Override
-			public void onSuccess(List<Team> teams) {
+			public void onSuccess(Map<Team, Long> teams) {
 				view.setTeamsFilterVisible(!teams.isEmpty());
-				view.setTeamsFilterTeams(teams);
+				view.setTeamsFilterTeams(teams.keySet());
 			}
 		};
 		TeamListWidget.getTeams(currentUserId, synapseClient, adapterFactory, teamCallback);
@@ -392,13 +393,13 @@ public class ProfilePresenter extends AbstractActivity implements ProfileView.Pr
 		view.clearTeamNotificationCount();
 		if (isOwner)
 			view.refreshTeamInvites();
-		AsyncCallback<List<Team>> teamCallback = new AsyncCallback<List<Team>>() {
+		AsyncCallback<Map<Team, Long>> teamCallback = new AsyncCallback<Map<Team, Long>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				view.setTeamsError(caught.getMessage());
 			}
 			@Override
-			public void onSuccess(List<Team> teams) {
+			public void onSuccess(Map<Team, Long> teams) {
 				view.setTeams(teams,isOwner);
 			}
 		};

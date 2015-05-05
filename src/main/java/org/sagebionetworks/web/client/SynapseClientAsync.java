@@ -4,6 +4,7 @@ package org.sagebionetworks.web.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.sagebionetworks.repo.model.ACCESS_TYPE;
@@ -413,4 +414,11 @@ public interface SynapseClientAsync {
 	void updateEntity(Entity toUpdate, AsyncCallback<Entity> callback);
 
 	void updateAnnotations(String entityId, Annotations annotations, AsyncCallback<Void> callback);
+
+	void getTeamsBySearchWithRequestCount(String userId, String searchTerm,
+			Integer limit, Integer offset,
+			AsyncCallback<Map<Team, Long>> callback);
+
+	void getTeamsForUserWithRequestCount(String userId,
+			AsyncCallback<Map<Team, Long>> asyncCallback);
 }

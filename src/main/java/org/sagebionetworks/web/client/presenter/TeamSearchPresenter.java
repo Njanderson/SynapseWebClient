@@ -1,6 +1,9 @@
 package org.sagebionetworks.web.client.presenter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.sagebionetworks.repo.model.Team;
 import org.sagebionetworks.web.client.DisplayUtils;
@@ -31,7 +34,7 @@ public class TeamSearchPresenter extends AbstractActivity implements TeamSearchV
 	private GlobalApplicationState globalApplicationState;
 	private int offset;
 	private String searchTerm;
-	private PaginatedResults<Team> teamList;
+	private Set<Team> teamList;
 	
 	@Inject
 	public TeamSearchPresenter(TeamSearchView view,
@@ -81,11 +84,26 @@ public class TeamSearchPresenter extends AbstractActivity implements TeamSearchV
 		else
 			this.offset = offset;
 		//execute search, and update view with the results
-		synapseClient.getTeamsBySearch(searchTerm, SEARCH_TEAM_LIMIT, offset, new AsyncCallback<PaginatedResults<Team>>() {
+//		synapseClient.getTeamsBySearch(searchTerm, SEARCH_TEAM_LIMIT, offset, new AsyncCallback<PaginatedResults<Team>>() {
+//			@Override
+//			public void onSuccess(PaginatedResults<Team> result) {
+//				teamList = result;
+//				view.configure(teamList.getResults(), searchTerm);
+//			}
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view)) {					
+//					view.showErrorMessage(caught.getMessage());
+//				} 
+//			}
+//		});
+		//execute search, and update view with the results
+		synapseClient.getTeamsBySearchWithRequestCount(authenticationController.getCurrentUserPrincipalId(), searchTerm,
+				SEARCH_TEAM_LIMIT, offset, new AsyncCallback<Map<Team, Long>>() {
 			@Override
-			public void onSuccess(PaginatedResults<Team> result) {
-				teamList = result;
-				view.configure(teamList.getResults(), searchTerm);
+			public void onSuccess(Map<Team, Long> result) {
+				teamList = result.keySet();
+				view.configure(result, searchTerm);
 			}
 			@Override
 			public void onFailure(Throwable caught) {
@@ -98,7 +116,7 @@ public class TeamSearchPresenter extends AbstractActivity implements TeamSearchV
 	
 	@Override
 	public List<PaginationEntry> getPaginationEntries(int nPerPage, int nPagesToShow) {
-		Long nResults = teamList.getTotalNumberOfResults();
+		Long nResults = (long) teamList.size();
 		if(nResults == null)
 			return null;
 		return PaginationUtil.getPagination(nResults.intValue(), offset, nPerPage, nPagesToShow);

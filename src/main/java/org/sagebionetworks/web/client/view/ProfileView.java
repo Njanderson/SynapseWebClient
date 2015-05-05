@@ -1,6 +1,8 @@
 package org.sagebionetworks.web.client.view;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.sagebionetworks.repo.model.Team;
 import org.sagebionetworks.repo.model.UserProfile;
@@ -38,7 +40,7 @@ public interface ProfileView extends IsWidget, SynapseView {
 	void showChallengesLoading(boolean isVisible);
 	void setIsMoreChallengesVisible(boolean isVisible);
 	void showTeamsLoading();
-	void setTeams(List<Team> teams, boolean isOwner);
+	void setTeams(Map<Team, Long> teams, boolean isOwner);
 	void setTeamsError(String error);
 	void setTeamNotificationCount(String count);
 	void clearProjects();
@@ -51,7 +53,7 @@ public interface ProfileView extends IsWidget, SynapseView {
 	void showProjectsLoading(boolean isLoading);
 	void showProjectFiltersUI();
 	void hideLoading();
-	void setTeamsFilterTeams(List<Team> teams);
+	void setTeamsFilterTeams(Set<Team> teams);
 	void setTeamsFilterVisible(boolean isVisible);
 	void setTeamsFilterSelected();
 	void setMyProjectsFilterSelected();

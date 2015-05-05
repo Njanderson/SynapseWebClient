@@ -3,6 +3,7 @@ package org.sagebionetworks.web.client.widget.team;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.sagebionetworks.repo.model.Team;
 import org.sagebionetworks.web.client.DisplayConstants;
@@ -60,7 +61,7 @@ public class TeamListWidgetViewImpl extends FlowPanel implements TeamListWidgetV
 	}
 	
 	@Override
-	public void configure(List<Team> teams, boolean isBig) {
+	public void configure(Set<Team> teams, boolean isBig) {
 		this.isBig = isBig;
 		clear();
 		team2Badge = new HashMap<String, HasNotificationUI>();

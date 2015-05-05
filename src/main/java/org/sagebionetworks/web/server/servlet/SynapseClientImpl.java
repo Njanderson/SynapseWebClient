@@ -15,11 +15,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -156,6 +159,7 @@ import org.sagebionetworks.web.shared.exceptions.UnknownErrorException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 
@@ -1775,6 +1779,11 @@ public class SynapseClientImpl extends RemoteServiceServlet implements
 			throw ExceptionUtil.convertSynapseException(e);
 		}
 	}
+	
+	public Map<Team, Long> getTeamsForUserWithRequestCount(String userId) throws RestServiceException {
+		List<Team> teams = getTeamsForUser(userId);
+		return getRequestCountFromTeams(userId, teams);	
+	}
 
 	@Override
 	public List<Team> getTeamsForUser(String userId)
@@ -1821,6 +1830,20 @@ public class SynapseClientImpl extends RemoteServiceServlet implements
 		} catch (SynapseException e) {
 			throw ExceptionUtil.convertSynapseException(e);
 		} 
+	}
+	
+	public Map<Team,Long> getRequestCountFromTeams(String userId, List<Team> teams) throws RestServiceException {
+		Map<Team, Long> teamsToRequestCount = new LinkedHashMap<Team, Long>();
+		for (Team team: teams) {
+			teamsToRequestCount.put(team, getOpenRequestCount(userId, team.getId()));
+		}
+		return teamsToRequestCount;
+	}
+	
+	public Map<Team,Long> getTeamsBySearchWithRequestCount(String userId, String searchTerm, Integer limit,
+			Integer offset) throws RestServiceException {
+		List<Team> teams = getTeamsBySearch(searchTerm, limit, offset).getResults();
+		return getRequestCountFromTeams(userId, teams);
 	}
 
 	public TeamMembershipStatus getTeamMembershipState(String currentUserId, String teamId)
@@ -2894,5 +2917,4 @@ public class SynapseClientImpl extends RemoteServiceServlet implements
 		// This method does nothing?
 		
 	}
-
 }

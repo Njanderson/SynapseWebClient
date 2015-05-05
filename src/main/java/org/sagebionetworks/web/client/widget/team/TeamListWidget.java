@@ -1,12 +1,9 @@
 package org.sagebionetworks.web.client.widget.team;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import org.sagebionetworks.repo.model.Team;
 import org.sagebionetworks.schema.adapter.AdapterFactory;
-import org.sagebionetworks.schema.adapter.JSONObjectAdapterException;
-import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.GlobalApplicationState;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.security.AuthenticationController;
@@ -47,55 +44,59 @@ public class TeamListWidget implements TeamListWidgetView.Presenter{
 		globalApplicationState.getPlaceChanger().goTo(place);
 	}
 	
-	public void configure(List<Team> teams, boolean isBig, boolean isRequestCountVisible) {
+	public void configure(Map<Team, Long> teams, boolean isBig, boolean isRequestCountVisible) {
 		configure(teams, isBig, isRequestCountVisible, null);
 	}
 	
-	public void configure(List<Team> teams, boolean isBig, boolean isRequestCountVisible, RequestCountCallback requestCountCallback) {
+	public void configure(Map<Team, Long> teams, boolean isBig, boolean isRequestCountVisible, RequestCountCallback requestCountCallback) {
 		this.requestCountCallback = requestCountCallback;
 		
-		view.configure(teams, isBig);
+		view.configure(teams.keySet(), isBig);
 		//then asynchronously load the request counts
 		if (isRequestCountVisible) {
-			for (Team team : teams) {
-				queryForRequestCount(team.getId());
+			for (Team team : teams.keySet()) {
+				//only inform the view if the resulting count is positive
+				if (teams.get(team) > 0)
+					view.setRequestCount(team.getId(), teams.get(team));
+				if (requestCountCallback != null)
+					requestCountCallback.invoke(team.getId(), teams.get(team));
 			}
 		}
 	}
 	
-	public static void getTeams(String userId, SynapseClientAsync synapseClient, final AdapterFactory adapterFactory, final AsyncCallback<List<Team>> callback) {
-		synapseClient.getTeamsForUser(userId, new AsyncCallback<List<Team>>() {
+	public static void getTeams(String userId, SynapseClientAsync synapseClient, final AdapterFactory adapterFactory, final AsyncCallback<Map<Team, Long>> teamCallback) {
+		synapseClient.getTeamsForUserWithRequestCount(userId, new AsyncCallback<Map<Team, Long>>() {
 			@Override
-			public void onSuccess(List<Team> teams) {
-				callback.onSuccess(teams);
+			public void onSuccess(Map<Team, Long> teams) {
+				teamCallback.onSuccess(teams);
 			}
 			@Override
 			public void onFailure(Throwable caught) {
-				callback.onFailure(caught);
+				teamCallback.onFailure(caught);
 			}
 		});
 	}
 	
-	public void queryForRequestCount(final String teamId) {
-		synapseClient.getOpenRequestCount(authenticationController.getCurrentUserPrincipalId(), teamId, new AsyncCallback<Long>() {
-			@Override
-			public void onSuccess(Long result) {
-				if (result != null) {
-					//only inform the view if the resulting count is positive
-					if (result > 0)
-						view.setRequestCount(teamId, result);
-					if (requestCountCallback != null)
-						requestCountCallback.invoke(teamId, result);
-				}
-			}
-			@Override
-			public void onFailure(Throwable caught) {
-				if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view)) {					
-					view.showErrorMessage(caught.getMessage());
-				} 
-			}
-		});
-	}
+//	public void queryForRequestCount(final String teamId) {
+//		synapseClient.getOpenRequestCount(authenticationController.getCurrentUserPrincipalId(), teamId, new AsyncCallback<Long>() {
+//			@Override
+//			public void onSuccess(Long result) {
+//				if (result != null) {
+//					//only inform the view if the resulting count is positive
+//					if (result > 0)
+//						view.setRequestCount(teamId, result);
+//					if (requestCountCallback != null)
+//						requestCountCallback.invoke(teamId, result);
+//				}
+//			}
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view)) {					
+//					view.showErrorMessage(caught.getMessage());
+//				} 
+//			}
+//		});
+//	}
 	
 	public Widget asWidget() {
 		view.setPresenter(this);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.sagebionetworks.client.exceptions.SynapseException;
@@ -333,6 +334,7 @@ public interface SynapseClient extends RemoteService {
 	public PaginatedResults<Team> getTeams(String userId, Integer limit, Integer offset) throws RestServiceException;
 	public List<Team> getTeamsForUser(String userId) throws RestServiceException;
 	public PaginatedResults<Team> getTeamsBySearch(String searchTerm, Integer limit, Integer offset) throws RestServiceException;
+	public Map<Team, Long> getTeamsBySearchWithRequestCount(String userId, String searchTerm, Integer limit, Integer offset) throws RestServiceException;
 	public TeamBundle getTeamBundle(String userId, String teamId, boolean isLoggedIn) throws RestServiceException;
 	public Long getOpenRequestCount(String currentUserId, String teamId) throws RestServiceException;
 	public ArrayList<OpenUserInvitationBundle> getOpenInvitations(String userId) throws RestServiceException;
@@ -512,5 +514,7 @@ public interface SynapseClient extends RemoteService {
 
 	Entity createExternalFile(String parentEntityId, String externalUrl,
 			String name) throws RestServiceException;
+
+	Map<Team, Long> getTeamsForUserWithRequestCount(String userId) throws RestServiceException;
 	
 }

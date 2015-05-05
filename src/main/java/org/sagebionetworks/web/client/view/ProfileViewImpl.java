@@ -1,6 +1,8 @@
 package org.sagebionetworks.web.client.view;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.gwtbootstrap3.client.shared.event.AlertClosedEvent;
 import org.gwtbootstrap3.client.shared.event.AlertClosedHandler;
@@ -38,6 +40,8 @@ import org.sagebionetworks.web.client.widget.team.TeamListWidget;
 import org.sagebionetworks.web.shared.ChallengeBundle;
 import org.sagebionetworks.web.shared.OpenTeamInvitationBundle;
 import org.sagebionetworks.web.shared.OpenUserInvitationBundle;
+
+
 
 
 
@@ -492,7 +496,7 @@ public class ProfileViewImpl extends Composite implements ProfileView {
 	}
 	
 	@Override
-	public void setTeamsFilterTeams(List<Team> teams) {
+	public void setTeamsFilterTeams(Set<Team> teams) {
 		teamFiltersDropDownMenu.clear();
 		//also create a link for each team in the project filters
 		addMyTeamProjectsFilter();
@@ -510,7 +514,7 @@ public class ProfileViewImpl extends Composite implements ProfileView {
 	}
 	
 	@Override
-	public void setTeams(List<Team> teams, boolean isOwner) {
+	public void setTeams(Map<Team, Long> teams, boolean isOwner) {
 		myTeamsWidget.configure(teams, false, isOwner, new TeamListWidget.RequestCountCallback() {
 			@Override
 			public void invoke(String teamId, Long requestCount) {

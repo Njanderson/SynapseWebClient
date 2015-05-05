@@ -1,6 +1,7 @@
 package org.sagebionetworks.web.client.view;
 
 import java.util.List;
+import java.util.Map;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.TextBox;
@@ -109,7 +110,7 @@ public class TeamSearchViewImpl extends Composite implements TeamSearchView {
 	}
 	
 	@Override
-	public void configure(List<Team> teams, String searchTerm) {
+	public void configure(Map<Team, Long> teams, String searchTerm) {
 		mainContainer.clear();
 		searchField.setValue(searchTerm);
 		teamListWidget.configure(teams, true, false);

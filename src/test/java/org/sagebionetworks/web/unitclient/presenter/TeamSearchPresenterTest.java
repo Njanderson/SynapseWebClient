@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -83,10 +84,11 @@ public class TeamSearchPresenterTest {
 		presenter.setPlace(place);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSearch() throws RestServiceException {
 		presenter.search("test", null);
-		verify(mockView).configure(anyList(), anyString());
+		verify(mockView).configure(any(Map.class), anyString());
 	}
 	
 	@Test

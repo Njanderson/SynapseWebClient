@@ -1,6 +1,7 @@
 package org.sagebionetworks.web.client.view;
 
 import java.util.List;
+import java.util.Map;
 
 import org.sagebionetworks.repo.model.Team;
 import org.sagebionetworks.web.client.SynapsePresenter;
@@ -18,7 +19,7 @@ public interface TeamSearchView extends IsWidget, SynapseView {
 	 */
 	public void setPresenter(Presenter presenter);
 	
-	public void configure(List<Team> teams, String searchTerm);
+	public void configure(Map<Team, Long> teams, String searchTerm);
 	public interface Presenter extends SynapsePresenter {
 		void goTo(Place place);
 		int getOffset();
