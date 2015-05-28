@@ -24,6 +24,7 @@
 				</li>
 			</ul>
 			<div>
+			    <g:SimplePanel ui:field="synAlertPanel"/>
 				<g:SimplePanel ui:field="pageContent" />
 			</div>
 			<div class="clear"></div>

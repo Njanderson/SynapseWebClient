@@ -1,6 +1,7 @@
 package org.sagebionetworks.web.client.widget.entity;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A simple model dialog prompting for 2 values
@@ -32,13 +33,8 @@ public interface PromptTwoValuesModalView extends IsWidget {
 	public void configure(String title, String label1, String value1, String label2, String value2, String buttonText);
 	
 	public String getValue1();
-	public String getValue2();
 	
-	/**
-	 * Show an error message..
-	 * @param error
-	 */
-	public void showError(String error);
+	public String getValue2();
 	
 	/**
 	 * Bind this view to its presenter.
@@ -66,5 +62,7 @@ public interface PromptTwoValuesModalView extends IsWidget {
 	 * @param isLoading
 	 */
 	public void setLoading(boolean isLoading);
+	
+	public void setSynAlertWidget(Widget synAlert);
 
 }

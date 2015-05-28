@@ -31,6 +31,7 @@
 					<t:TBody ui:field="previousVersionsTable"></t:TBody>
 				</t:Table>
 				<g:SimplePanel ui:field="paginationWidgetContainer" addStyleNames="margin-10" />
+				<g:SimplePanel ui:field="synAlertPanel" addStyleNames="margin-10"/>
 			</b:Panel>
 	</g:HTMLPanel>
 </ui:UiBinder>

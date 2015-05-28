@@ -9,6 +9,7 @@ import org.sagebionetworks.web.client.UserAccountServiceAsync;
 import org.sagebionetworks.web.client.place.users.RegisterAccount;
 import org.sagebionetworks.web.client.presenter.Presenter;
 import org.sagebionetworks.web.client.view.users.RegisterAccountView;
+import org.sagebionetworks.web.client.widget.entity.controller.SynapseAlert;
 import org.sagebionetworks.web.shared.exceptions.ConflictException;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -24,18 +25,21 @@ public class RegisterAccountPresenter extends AbstractActivity implements Regist
 	private UserAccountServiceAsync userService;
 	private GlobalApplicationState globalApplicationState;
 	private GWTWrapper gwt;
+	private SynapseAlert synAlert;
 	
 	@Inject
 	public RegisterAccountPresenter(RegisterAccountView view,
 			UserAccountServiceAsync userService,
 			GlobalApplicationState globalApplicationState,
-			GWTWrapper gwt) {
+			GWTWrapper gwt, SynapseAlert synAlert) {
 		this.view = view;
 		// Set the presenter on the view
 		this.userService = userService;
 		this.globalApplicationState = globalApplicationState;
 		this.gwt = gwt;
+		this.synAlert = synAlert;
 		view.setPresenter(this);
+		view.setSynAlertWidget(synAlert.asWidget());
 	}
 
 	@Override
@@ -54,6 +58,7 @@ public class RegisterAccountPresenter extends AbstractActivity implements Regist
 		this.place = place;
 		view.setPresenter(this);
 		view.showDefault();
+		synAlert.clear();
 		String token = place.toToken();
 		String email = "";
 		if(token != null && !ClientProperties.DEFAULT_PLACE_TOKEN.equals(token)){
@@ -71,6 +76,7 @@ public class RegisterAccountPresenter extends AbstractActivity implements Regist
 	 */
 	@Override
 	public void registerUser(String email) {
+		synAlert.clear();
 		view.enableRegisterButton(false);
 		String callbackUrl = gwt.getHostPageBaseURL() + "#!NewAccount:";
 		userService.createUserStep1(email, callbackUrl, new AsyncCallback<Void>() {			
@@ -86,8 +92,7 @@ public class RegisterAccountPresenter extends AbstractActivity implements Regist
 				if(caught instanceof ConflictException) {
 					view.markEmailUnavailable();
 				} else {
-					if (!DisplayUtils.handleServiceException(caught, globalApplicationState, false, view))
-						view.showErrorMessage(DisplayConstants.ERROR_GENERIC_NOTIFY);
+					synAlert.handleException(caught);
 				}
 			}
 		});

@@ -34,6 +34,9 @@ public class DoiWidgetViewImpl extends Composite implements DoiWidgetView {
 	SimplePanel doiProcessing;
 	
 	@UiField
+	SimplePanel synAlertPanel;
+	
+	@UiField
 	HTMLPanel doiHTML;
 	
 	Widget widget;
@@ -119,6 +122,11 @@ public class DoiWidgetViewImpl extends Composite implements DoiWidgetView {
 	@Override
 	public void showErrorMessage(String message) {
 		DisplayUtils.showErrorMessage(message);
+	}
+
+	@Override
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}
 	
 

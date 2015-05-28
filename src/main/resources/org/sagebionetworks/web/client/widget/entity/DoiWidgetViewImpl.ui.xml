@@ -16,5 +16,6 @@
 	    <g:SimplePanel ui:field="doiProcessing" addStyleNames="inline-block">
 	        <bh:Text text="DOI processing"/>
 	    </g:SimplePanel>
+	    <g:SimplePanel ui:field="synAlertPanel"/>
 	</g:FlowPanel>
 </ui:UiBinder>

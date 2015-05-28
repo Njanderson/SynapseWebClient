@@ -20,7 +20,8 @@
 								<div class="col-sm-10">
 									<b:TextBox ui:field="emailAddressField" placeholder="Enter email" />
 									<div ui:field="emailAddressError" style="display:none"
-										class="help-block"></div>
+										class="help-block"/>
+									<g:SimplePanel ui:field="synAlertPanel"/>
 								</div>
 							</div>
 							<div class="col-sm-12 margin-bottom-40">

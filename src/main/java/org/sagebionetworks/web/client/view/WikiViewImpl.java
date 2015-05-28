@@ -25,6 +25,8 @@ public class WikiViewImpl extends Composite implements WikiView {
 	SimplePanel footer;
 	@UiField
 	SimplePanel pageContent;
+	@UiField
+	SimplePanel synAlertPanel;
 	
 	private Presenter presenter;
 	private IconsImageBundle icons;
@@ -84,6 +86,13 @@ public class WikiViewImpl extends Composite implements WikiView {
 		DisplayUtils.sendAllLinksToNewWindow(panel);
 		pageContent.clear();
 		pageContent.add(panel);
+	}
+
+
+
+	@Override
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}
 
 }

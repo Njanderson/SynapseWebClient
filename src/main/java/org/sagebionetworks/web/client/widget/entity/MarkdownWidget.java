@@ -55,6 +55,8 @@ public class MarkdownWidget extends FlowPanel implements SynapseView {
 	private boolean isPreview;
 	private Long wikiVersionInView;
 	
+	
+	// Split into MVP, make the presenter that makes async, 
 	@Inject
 	public MarkdownWidget(SynapseClientAsync synapseClient,
 			SynapseJSNIUtils synapseJSNIUtils, WidgetRegistrar widgetRegistrar,
@@ -64,7 +66,8 @@ public class MarkdownWidget extends FlowPanel implements SynapseView {
 			AuthenticationController authenticationController,
 			ResourceLoader resourceLoader, 
 			GWTWrapper gwt,
-			PortalGinInjector ginInjector) {
+			PortalGinInjector ginInjector,
+			SynapseAlert synAlert) {
 		super();
 		this.synapseClient = synapseClient;
 		this.synapseJSNIUtils = synapseJSNIUtils;

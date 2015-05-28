@@ -53,27 +53,18 @@ public class FileHistoryWidgetViewImpl extends Composite implements FileHistoryW
 	Hyperlink currentVersionLink;
 	@UiField
 	Button editInfoButton;
+	@UiField
+	SimplePanel synAlertPanel;
 	
-	PromptTwoValuesModalView editVersionInfoModal;
 	
 	private static DateTimeFormat shortDateFormat = DateTimeFormat.getShortDateFormat();
 	private Presenter presenter;
 	
 	@Inject
-	public FileHistoryWidgetViewImpl(PortalGinInjector ginInjector, PromptTwoValuesModalView editVersionInfoDialog) {
+	public FileHistoryWidgetViewImpl(PortalGinInjector ginInjector) {
 		this.ginInjector = ginInjector;
-		this.editVersionInfoModal = editVersionInfoDialog;
-		
 		initWidget(uiBinder.createAndBindUi(this));
 		DisplayUtils.configureShowHide(allVersions, previousVersions);
-		
-		editVersionInfoModal.setPresenter(new PromptTwoValuesModalView.Presenter() {
-			@Override
-			public void onPrimary() {
-				presenter.updateVersionInfo(editVersionInfoModal.getValue1(), editVersionInfoModal.getValue2());
-			}
-		});
-		
 		editInfoButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -177,14 +168,10 @@ public class FileHistoryWidgetViewImpl extends Composite implements FileHistoryW
 	public void setEditVersionInfoButtonVisible(boolean isVisible) {
 		editInfoButton.setVisible(isVisible);
 	}
-	
+
 	@Override
-	public void showEditVersionInfo(String oldLabel, String oldComment) {
-		editVersionInfoModal.configure("Edit Version Info", "Version label", oldLabel, "Version comment", oldComment, DisplayConstants.OK);
-		editVersionInfoModal.show();
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}
-	@Override
-	public void hideEditVersionInfo() {
-		editVersionInfoModal.hide();
-	}
+
 }

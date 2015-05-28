@@ -31,6 +31,8 @@ public class RegisterAccountViewImpl extends Composite implements RegisterAccoun
 	@UiField
 	SimplePanel footer;	
 	@UiField
+	SimplePanel synAlertPanel;
+	@UiField
 	TextBox emailAddressField;
 	@UiField
 	DivElement emailAddress;
@@ -154,6 +156,11 @@ public class RegisterAccountViewImpl extends Composite implements RegisterAccoun
 	@Override
 	public void setEmail(String email) {
 		emailAddressField.setText(email);
+	}
+
+	@Override
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}
 	
 }

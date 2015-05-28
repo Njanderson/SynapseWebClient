@@ -2,7 +2,6 @@ package org.sagebionetworks.web.client.widget.entity;
 
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
 import org.gwtbootstrap3.client.shared.event.ModalShownHandler;
-import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.Modal;
@@ -15,6 +14,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -37,7 +37,7 @@ public class PromptTwoValuesModalViewImpl implements PromptTwoValuesModalView {
 	@UiField
 	TextBox valueField2;
 	@UiField
-	Alert alert;
+	SimplePanel synAlertPanel;
 	@UiField
 	Button primaryButton;
 	
@@ -69,12 +69,6 @@ public class PromptTwoValuesModalViewImpl implements PromptTwoValuesModalView {
 	@Override
 	public String getValue2() {
 		return valueField2.getText();
-	}
-
-	@Override
-	public void showError(String error) {
-		alert.setVisible(true);
-		alert.setText(error);
 	}
 
 	@Override
@@ -111,7 +105,6 @@ public class PromptTwoValuesModalViewImpl implements PromptTwoValuesModalView {
 	@Override
 	public void clear() {
 		this.primaryButton.state().reset();
-		this.alert.setVisible(false);
 		this.valueField1.clear();
 		this.valueField2.clear();
 	}
@@ -133,6 +126,11 @@ public class PromptTwoValuesModalViewImpl implements PromptTwoValuesModalView {
 		this.label2.setText(label2);
 		this.valueField2.setText(value2);
 		this.primaryButton.setText(buttonText);
+	}
+
+	@Override
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}
 
 }

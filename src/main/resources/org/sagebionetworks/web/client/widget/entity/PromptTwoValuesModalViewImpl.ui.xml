@@ -20,7 +20,7 @@
 				</b:FormGroup>
 				
 			</bh:Div>
-			<b:Alert ui:field="alert" type="DANGER" visible="false"></b:Alert>
+			<g:SimplePanel ui:field="synAlertPanel"/>
 		</b:ModalBody>
 		<b:ModalFooter>
 			<b:Button ui:field="primaryButton" type="PRIMARY" dataLoadingText="Saving..." >Button text goes here</b:Button>

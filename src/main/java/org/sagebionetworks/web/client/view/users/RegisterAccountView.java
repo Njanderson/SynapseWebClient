@@ -4,6 +4,7 @@ import org.sagebionetworks.web.client.SynapseView;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface RegisterAccountView extends IsWidget, SynapseView {
 	
@@ -30,4 +31,6 @@ public interface RegisterAccountView extends IsWidget, SynapseView {
 		void registerUser(String email);
 	}
 	public void setEmail(String email);
+
+	public void setSynAlertWidget(Widget asWidget);
 }

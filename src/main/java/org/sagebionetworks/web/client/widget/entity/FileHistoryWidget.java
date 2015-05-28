@@ -7,16 +7,20 @@ import org.sagebionetworks.repo.model.Versionable;
 import org.sagebionetworks.web.client.DisplayConstants;
 import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.GlobalApplicationState;
+import org.sagebionetworks.web.client.PortalGinInjector;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.events.EntityUpdatedEvent;
 import org.sagebionetworks.web.client.events.EntityUpdatedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.widget.entity.controller.PreflightController;
+import org.sagebionetworks.web.client.widget.entity.controller.SynapseAlert;
 import org.sagebionetworks.web.client.widget.pagination.DetailedPaginationWidget;
 import org.sagebionetworks.web.client.widget.pagination.PageChangeListener;
 import org.sagebionetworks.web.shared.PaginatedResults;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,26 +42,44 @@ public class FileHistoryWidget implements FileHistoryWidgetView.Presenter, IsWid
 	public static final Integer VERSION_LIMIT = 100;
 	public PreflightController preflightController;
 	
+	private SynapseAlert modalSynAlert;
+	private SynapseAlert deleteSynAlert;
 	private DetailedPaginationWidget paginationWidget;
+	private PromptTwoValuesModalView modalEditor;
+	private PortalGinInjector ginInjector;
 	private boolean canEdit;
 	private Long versionNumber;
 	@Inject
 	public FileHistoryWidget(FileHistoryWidgetView view,
 			 SynapseClientAsync synapseClient, GlobalApplicationState globalApplicationState, AuthenticationController authenticationController,
 			 DetailedPaginationWidget paginationWidget,
-			 PreflightController preflightController) {
+			 PreflightController preflightController,
+			 final PromptTwoValuesModalView modalEditor,
+			 PortalGinInjector ginInjector) {
 		super();
+		this.modalEditor = modalEditor;
 		this.synapseClient = synapseClient;
 		this.view = view;
 		this.globalApplicationState = globalApplicationState;
 		this.authenticationController = authenticationController;
 		this.paginationWidget = paginationWidget;
 		this.preflightController = preflightController;
+		this.modalSynAlert = ginInjector.getSynapseAlertWidget();
+		this.deleteSynAlert = ginInjector.getSynapseAlertWidget();
 		view.setPaginationWidget(paginationWidget.asWidget());
 		this.view.setPresenter(this);
+		modalEditor.setPresenter(new PromptTwoValuesModalView.Presenter() {
+			@Override
+			public void onPrimary() {
+				updateVersionInfo(modalEditor.getValue1(), modalEditor.getValue2());
+			}
+		});
+		modalEditor.setSynAlertWidget(modalSynAlert.asWidget());
+		view.setSynAlertWidget(deleteSynAlert.asWidget());
 	}
 	
 	public void setEntityBundle(EntityBundle bundle, Long versionNumber) {
+		deleteSynAlert.clear();
 		this.bundle = bundle;
 		this.versionNumber = versionNumber;
 		this.canEdit = bundle.getPermissions().getCanCertifiedUserEdit();
@@ -79,7 +101,7 @@ public class FileHistoryWidget implements FileHistoryWidgetView.Presenter, IsWid
 			final Versionable vb = (Versionable)entity;
 			if (version != null && version.equals(vb.getVersionLabel()) &&
 				comment != null && comment.equals(vb.getVersionComment())) {
-				view.showInfo("Version Info Unchanged", "You didn't change anything about the version info.");
+				modalSynAlert.showError("Version info unchanged. You didn't change anything about the version info.");
 				return;
 			}
 			String versionLabel = null;
@@ -92,16 +114,12 @@ public class FileHistoryWidget implements FileHistoryWidgetView.Presenter, IsWid
 					new AsyncCallback<Entity>() {
 						@Override
 						public void onFailure(Throwable caught) {
-							if (!DisplayUtils.handleServiceException(
-									caught, globalApplicationState,
-									authenticationController.isLoggedIn(), view)) {
-								view.showErrorMessage(DisplayConstants.ERROR_UPDATE_FAILED
+								modalSynAlert.showError(DisplayConstants.ERROR_UPDATE_FAILED
 										+ "\n" + caught.getMessage());
-							}
 						}
 						@Override
 						public void onSuccess(Entity result) {
-							view.hideEditVersionInfo();
+							modalEditor.hide();
 							view.showInfo(DisplayConstants.VERSION_INFO_UPDATED, "Updated " + vb.getName());
 							fireEntityUpdatedEvent();
 						}
@@ -111,14 +129,11 @@ public class FileHistoryWidget implements FileHistoryWidgetView.Presenter, IsWid
 	
 	@Override
 	public void deleteVersion(final Long versionNumber) {
+		deleteSynAlert.clear();
 		synapseClient.deleteEntityVersionById(bundle.getEntity().getId(), versionNumber, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (!DisplayUtils.handleServiceException(caught,
-						globalApplicationState,
-						authenticationController.isLoggedIn(), view)) {
-					view.showErrorMessage(DisplayConstants.ERROR_ENTITY_DELETE_FAILURE + "\n" + caught.getMessage());
-				}
+				deleteSynAlert.handleException(caught);
 			}
 			@Override
 			public void onSuccess(Void result) {
@@ -185,8 +200,10 @@ public class FileHistoryWidget implements FileHistoryWidgetView.Presenter, IsWid
 		preflightController.checkUploadToEntity(bundle, new Callback() {
 			@Override
 			public void invoke() {
+				modalSynAlert.clear();
 				final Versionable vb = (Versionable)bundle.getEntity();
-				view.showEditVersionInfo(vb.getVersionLabel(), vb.getVersionComment());
+				modalEditor.configure("Edit Version Info", "Version label", vb.getVersionLabel(), "Version comment", vb.getVersionComment(), DisplayConstants.OK);
+				modalEditor.show();
 			}
 		});
 	}

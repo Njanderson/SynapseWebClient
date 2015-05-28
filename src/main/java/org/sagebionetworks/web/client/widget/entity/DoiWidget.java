@@ -9,6 +9,7 @@ import org.sagebionetworks.web.client.StackConfigServiceAsync;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.widget.entity.DoiWidgetView.Presenter;
+import org.sagebionetworks.web.client.widget.entity.controller.SynapseAlert;
 import org.sagebionetworks.web.shared.exceptions.NotFoundException;
 
 import com.google.gwt.user.client.Timer;
@@ -23,6 +24,7 @@ public class DoiWidget implements Presenter {
 	private DoiWidgetView view;
 	private SynapseClientAsync synapseClient;
 	private StackConfigServiceAsync stackConfigService;
+	private SynapseAlert synAlert;
 	GlobalApplicationState globalApplicationState;
 	AuthenticationController authenticationController;
 	
@@ -38,13 +40,16 @@ public class DoiWidget implements Presenter {
 			SynapseClientAsync synapseClient,
 			GlobalApplicationState globalApplicationState, 
 			StackConfigServiceAsync stackConfigService,
-			AuthenticationController authenticationController) {
+			AuthenticationController authenticationController,
+			SynapseAlert synAlert) {
 		this.view = view;
 		this.view.setPresenter(this);
 		this.synapseClient = synapseClient;
 		this.stackConfigService = stackConfigService;
 		this.globalApplicationState = globalApplicationState;
 		this.authenticationController = authenticationController;
+		this.synAlert = synAlert;
+		view.setSynAlertWidget(synAlert.asWidget());
 	}
 	
 	public void configure(String entityId, boolean canEdit, Long versionNumber) {
@@ -60,6 +65,7 @@ public class DoiWidget implements Presenter {
 
 	public void configureDoi() {
 		view.clear();
+		synAlert.clear();
 		//get this entity's Doi (if it has one)
 		doi = null;
 		timer = null;
@@ -73,6 +79,7 @@ public class DoiWidget implements Presenter {
 				} else if (doiStatus == DoiStatus.IN_PROCESS) {
 					view.showDoiInProgress();
 				} else if (doiStatus == DoiStatus.CREATED || doiStatus == DoiStatus.READY) {
+					synAlert.clear();
 					getDoiPrefix(new AsyncCallback<String>() {
 						@Override
 						public void onSuccess(String prefix) {
@@ -81,8 +88,7 @@ public class DoiWidget implements Presenter {
 						
 						@Override
 						public void onFailure(Throwable caught) {
-							if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view))
-								view.showErrorMessage(caught.getMessage());
+							synAlert.handleException(caught);
 						}
 					});
 				}				
@@ -102,8 +108,7 @@ public class DoiWidget implements Presenter {
 					if (canEdit)
 						view.showCreateDoi();
 				} else {
-					if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view))
-						view.showErrorMessage(caught.getMessage());
+					synAlert.handleException(caught);
 				}
 			}
 		});
@@ -111,19 +116,20 @@ public class DoiWidget implements Presenter {
 
 	@Override
 	public void createDoi() {
-	  synapseClient.createDoi(entityId, versionNumber, new AsyncCallback<Void>() {
-	    @Override
-	    public void onSuccess(Void v) {
-	      view.showInfo(DisplayConstants.DOI_REQUEST_SENT_TITLE, DisplayConstants.DOI_REQUEST_SENT_MESSAGE);
-	      configureDoi();
-	    }
-	    @Override
-	    public void onFailure(Throwable caught) {
-	      if(!DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view))
-	        view.showErrorMessage(caught.getMessage());
-	    }
-	  });
-	} 
+		synAlert.clear();
+		synapseClient.createDoi(entityId, versionNumber, new AsyncCallback<Void>() {
+		    @Override
+		    public void onSuccess(Void v) {
+		      view.showInfo(DisplayConstants.DOI_REQUEST_SENT_TITLE, DisplayConstants.DOI_REQUEST_SENT_MESSAGE);
+		      configureDoi();
+		    }
+		    @Override
+		    public void onFailure(Throwable caught) {
+		    	synAlert.handleException(caught);
+		    }
+		});
+	}
+	
 	@Override
 	public void getDoiPrefix(AsyncCallback<String> callback) {
 		stackConfigService.getDoiPrefix(callback);

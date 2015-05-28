@@ -3,6 +3,7 @@ package org.sagebionetworks.web.client.view.users;
 import org.sagebionetworks.web.client.SynapseView;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface PasswordResetView extends IsWidget, SynapseView {
 	
@@ -32,5 +33,7 @@ public interface PasswordResetView extends IsWidget, SynapseView {
 	}
 
 	public void showExpiredRequest();
+
+	public void setSynAlertWidget(Widget synAlert);
 
 }

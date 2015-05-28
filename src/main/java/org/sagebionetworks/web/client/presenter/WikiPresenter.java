@@ -6,6 +6,7 @@ import org.sagebionetworks.web.client.RssServiceAsync;
 import org.sagebionetworks.web.client.place.WikiPlace;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.view.WikiView;
+import org.sagebionetworks.web.client.widget.entity.controller.SynapseAlert;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -25,17 +26,21 @@ public class WikiPresenter extends AbstractActivity implements WikiView.Presente
 	private AuthenticationController authenticationController;
 	private RssServiceAsync rssService;
 	private GlobalApplicationState globalApplicationState;
+	private SynapseAlert synAlert;
 	
 	@Inject
 	public WikiPresenter(WikiView view, 
 			AuthenticationController authenticationController, 
 			GlobalApplicationState globalApplicationState, 
-			RssServiceAsync rssService){
+			RssServiceAsync rssService,
+			SynapseAlert synAlert){
 		this.authenticationController = authenticationController;
 		this.view = view;
 		this.rssService = rssService;
 		this.globalApplicationState = globalApplicationState;
+		this.synAlert = synAlert;
 		view.setPresenter(this);
+		view.setSynAlertWidget(synAlert.asWidget());
 	}
 
 	@Override
@@ -56,6 +61,7 @@ public class WikiPresenter extends AbstractActivity implements WikiView.Presente
 	
 	@Override
 	public void loadSourceContent(String cacheProviderId) {
+		synAlert.clear();
 		rssService.getCachedContent(cacheProviderId, new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(String result) {
@@ -63,7 +69,7 @@ public class WikiPresenter extends AbstractActivity implements WikiView.Presente
 			}
 			@Override
 			public void onFailure(Throwable caught) {
-				DisplayUtils.handleServiceException(caught, globalApplicationState, authenticationController.isLoggedIn(), view);
+				synAlert.handleException(caught);
 			}
 		});
 		

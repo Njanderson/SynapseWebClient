@@ -36,6 +36,8 @@ public class PasswordResetViewImpl extends Composite implements PasswordResetVie
 	SimplePanel header;
 	@UiField
 	SimplePanel footer;
+	@UiField
+	SimplePanel synAlertPanel;
 
 	@UiField
 	DivElement resetPasswordForm;
@@ -292,5 +294,10 @@ public class PasswordResetViewImpl extends Composite implements PasswordResetVie
 		loadingPanel.setVisible(false);
 		pageTitle.setInnerHTML(DisplayConstants.REQUEST_EXPIRED);
 		contentHtml.setInnerHTML(DisplayConstants.SET_PASSWORD_EXPIRED);
+	}
+
+	@Override
+	public void setSynAlertWidget(Widget synAlert) {
+		synAlertPanel.setWidget(synAlert);
 	}  
 }

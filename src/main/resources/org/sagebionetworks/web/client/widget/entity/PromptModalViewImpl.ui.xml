@@ -15,7 +15,7 @@
 					<b:TextBox b:id="formName" ui:field="nameField" />
 				</b:FormGroup>
 			</bh:Div>
-			<b:Alert ui:field="alert" type="DANGER" visible="false"></b:Alert>
+			<b:Alert ui:field="alert"/>
 		</b:ModalBody>
 		<b:ModalFooter>
 			<b:Button ui:field="primaryButton" type="PRIMARY" dataLoadingText="Saving..." >Button text goes here</b:Button>

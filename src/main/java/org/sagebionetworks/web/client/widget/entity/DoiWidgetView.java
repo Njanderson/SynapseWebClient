@@ -4,6 +4,7 @@ import org.sagebionetworks.web.client.SynapseView;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 public interface DoiWidgetView extends IsWidget, SynapseView {
 
@@ -17,5 +18,6 @@ public interface DoiWidgetView extends IsWidget, SynapseView {
 	void showDoiCreated(String doiText);
 	void showDoiInProgress();
 	void showDoiError();
+	void setSynAlertWidget(Widget asWidget);
 
 }
