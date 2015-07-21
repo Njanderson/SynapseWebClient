@@ -29,9 +29,9 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPresenter, IsTreeItem {
+public class EntityTreeItem implements EntityTreeItemView.Presenter, SynapseWidgetPresenter, IsTreeItem {
 	
-	private EntityBadgeView view;
+	private EntityTreeItemView view;
 	private EntityIconsCache iconsCache;
 	private SynapseClientAsync synapseClient;
 	private GlobalApplicationState globalAppState;
@@ -41,9 +41,10 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 	private SynapseJSNIUtils synapseJSNIUtils;
 	private TreeItem treeItem;
 	private boolean isExpandable;
+	private Callback selectChangeCallback;
 	
 	@Inject
-	public EntityBadge(EntityBadgeView view, 
+	public EntityTreeItem(EntityTreeItemView view, 
 			EntityIconsCache iconsCache,
 			SynapseClientAsync synapseClient,
 			GlobalApplicationState globalAppState,
@@ -63,6 +64,7 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 	
 	public void configure(EntityQueryResult header, boolean isRootItem, boolean isExpandable, Callback selectChangeCallback) {
 		entityHeader = header;
+		this.selectChangeCallback = selectChangeCallback;
 		treeItem = new TreeItem(asWidget());
 		view.setEntity(header);
 		
@@ -174,6 +176,11 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 	public void setClickHandler(ClickHandler handler) {
 		modifiedByUserBadge.setCustomClickHandler(handler);
 		view.setClickHandler(handler);
+	}
+
+	@Override
+	public void entitySelectedChange() {
+		selectChangeCallback.invoke();
 	}
 
 }

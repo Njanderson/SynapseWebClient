@@ -1,19 +1,29 @@
 package org.sagebionetworks.web.client.widget.entity.browse;
 
+import java.util.Set;
+
 import org.sagebionetworks.repo.model.Entity;
+import org.sagebionetworks.repo.model.EntityBundle;
 import org.sagebionetworks.repo.model.Folder;
 import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 import org.sagebionetworks.web.client.DisplayConstants;
 import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.GlobalApplicationState;
+import org.sagebionetworks.web.client.PortalGinInjector;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.UploadView;
 import org.sagebionetworks.web.client.cookie.CookieProvider;
 import org.sagebionetworks.web.client.events.EntityUpdatedEvent;
 import org.sagebionetworks.web.client.events.EntityUpdatedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
-import org.sagebionetworks.web.client.utils.CallbackP;
+import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
+import org.sagebionetworks.web.client.widget.entity.controller.BulkActionController;
+import org.sagebionetworks.web.client.widget.entity.controller.EntityActionController;
+import org.sagebionetworks.web.client.widget.entity.menu.v2.Action;
+import org.sagebionetworks.web.client.widget.entity.menu.v2.ActionMenuWidget;
+import org.sagebionetworks.web.client.widget.entity.menu.v2.ActionMenuWidget.ActionListener;
+import org.sagebionetworks.web.client.widget.entity.menu.v2.BulkActionMenuWidget;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,13 +41,16 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 	boolean isCertifiedUser,canCertifiedUserAddChild;
 	private String currentFolderEntityId;
 	private EntityTreeBrowser entityTreeBrowser;
+	private PortalGinInjector ginInjector;
 	
 	@Inject
 	public FilesBrowser(FilesBrowserView view,
 			SynapseClientAsync synapseClient,
 			GlobalApplicationState globalApplicationState,
 			AuthenticationController authenticationController,
-			CookieProvider cookies, EntityTreeBrowser entityTreeBrowser) {
+			CookieProvider cookies, EntityTreeBrowser entityTreeBrowser,
+			PortalGinInjector ginInjector) {
+		this.ginInjector = ginInjector;
 		this.entityTreeBrowser = entityTreeBrowser;
 		this.view = view;		
 		this.synapseClient = synapseClient;
@@ -58,10 +71,10 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 		this.isCertifiedUser = isCertifiedUser;
 		this.canCertifiedUserAddChild = canCertifiedUserAddChild;
 		view.configure(canCertifiedUserAddChild);
-		entityTreeBrowser.configure(entityId, new CallbackP<EntityQueryResult>() {
+		entityTreeBrowser.configure(entityId, new Callback() {
 			@Override
-			public void invoke(EntityQueryResult selectedEntity) {
-				updateBulkActionMenu(selectedEntity);
+			public void invoke() {
+				updateBulkActionMenu();
 			}
 			
 		});
@@ -147,10 +160,10 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 			@Override
 			public void onSuccess(Void na) {
 				//folder is deleted when folder creation is canceled.  refresh the tree for updated information
-				entityTreeBrowser.configure(configuredEntityId, new CallbackP<EntityQueryResult>() {
+				entityTreeBrowser.configure(configuredEntityId, new Callback() {
 					@Override
-					public void invoke(EntityQueryResult selectedEntity) {
-						updateBulkActionMenu(selectedEntity);
+					public void invoke() {
+						updateBulkActionMenu();
 					}
 					
 				});
@@ -168,10 +181,10 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 			@Override
 			public void onSuccess(Entity result) {
 				view.showInfo("Folder '" + folder.getName() + "' Added", "");
-				entityTreeBrowser.configure(configuredEntityId, new CallbackP<EntityQueryResult>() {
+				entityTreeBrowser.configure(configuredEntityId, new Callback() {
 					@Override
-					public void invoke(EntityQueryResult selectedEntity) {
-						updateBulkActionMenu(selectedEntity);
+					public void invoke() {
+						updateBulkActionMenu();
 					}
 					
 				});
@@ -222,7 +235,37 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 	}
 
 	@Override
-	public void updateBulkActionMenu(EntityQueryResult selectedEntity) {
-		
+	public void updateBulkActionMenu() {
+		Set<EntityQueryResult> selectedEntities = entityTreeBrowser.getSelectedEntities();
 	}
+	
+	/**
+	 * Create a new action menu for an entity.
+	 * @param bundle
+	 * @return
+	 */
+	private BulkActionMenuWidget createEntityActionMenu(EntityBundle bundle, String wikiPageId){
+		// Create a menu
+		BulkActionMenuWidget actionMenu = ginInjector.createBulkActionMenuWidget();
+		// Create a controller.
+		final BulkActionController controller = ginInjector.createBulkActionController();
+//		actionMenu.addControllerWidget(controller);
+//		controller.configure(actionMenu, bundle, wikiPageId, new EntityUpdatedHandler() {
+//			@Override
+//			public void onPersistSuccess(EntityUpdatedEvent event) {
+//				presenter.fireEntityUpdatedEvent();
+//			}
+//		});
+//		annotationsShown = false;
+//		actionMenu.addActionListener(Action.TOGGLE_ANNOTATIONS, new ActionListener() {
+//			@Override
+//			public void onAction(Action action) {
+//				annotationsShown = !annotationsShown;
+//				controller.onAnnotationsToggled(annotationsShown);
+//				entityMetadata.setAnnotationsVisible(annotationsShown);
+//			}
+//		});
+		return actionMenu;
+	}
+	
 }

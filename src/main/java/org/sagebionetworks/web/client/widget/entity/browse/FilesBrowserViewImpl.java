@@ -39,6 +39,8 @@ public class FilesBrowserViewImpl implements FilesBrowserView {
 	private Widget widget;
 
 	@UiField
+	SimplePanel actionMenuContainer;
+	@UiField
 	SimplePanel uploaderContainer;
 	@UiField
 	SimplePanel quizInfoDialogContainer;
@@ -122,7 +124,7 @@ public class FilesBrowserViewImpl implements FilesBrowserView {
 	@Override
 	public void setTreeBrowserWidget(IsWidget entityTreeBrowser) {
 		// can migrate style to XML?
-		entityTreeBrowser.asWidget().addStyleName("margin-top-10");
+//		entityTreeBrowser.asWidget().addStyleName("margin-top-10");
 		files.setWidget(entityTreeBrowser);
 	}
 
@@ -205,5 +207,10 @@ public class FilesBrowserViewImpl implements FilesBrowserView {
 		} else {
 			newFolderDialog.hide();
 		}
+	}
+	
+	@Override
+	public void setBulkActionMenuWidget(IsWidget actionMenu) {
+		actionMenuContainer.setWidget(actionMenu);
 	}
 }

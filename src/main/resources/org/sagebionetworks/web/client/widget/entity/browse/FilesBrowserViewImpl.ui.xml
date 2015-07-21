@@ -19,6 +19,7 @@
 				</a:ActionButton>
 			</b:ButtonGroup>
 			<b:ButtonGroup>
+			    <g:SimplePanel ui:field="actionMenuContainer"/>
 			</b:ButtonGroup>
 		</b:ButtonToolBar>
 		<g:SimplePanel ui:field="files" styleName="highlight-box padding-top-0-imp" />

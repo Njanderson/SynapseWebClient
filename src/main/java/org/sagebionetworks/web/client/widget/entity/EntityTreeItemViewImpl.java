@@ -36,14 +36,14 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
+public class EntityTreeItemViewImpl extends Composite implements EntityTreeItemView {
 	
 	private Presenter presenter;
 	SynapseJSNIUtils synapseJSNIUtils;
 	SageImageBundle sageImageBundle;
 	Widget modifiedByWidget;
 	Widget widget;
-	public interface Binder extends UiBinder<Widget, EntityBadgeViewImpl> {	}
+	public interface Binder extends UiBinder<Widget, EntityTreeItemViewImpl> {	}
 
 	@UiField
 	Tooltip tooltip;
@@ -69,7 +69,7 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 	boolean isPopover;
 	
 	@Inject
-	public EntityBadgeViewImpl(final Binder uiBinder,
+	public EntityTreeItemViewImpl(final Binder uiBinder,
 			SynapseJSNIUtils synapseJSNIUtils,
 			SageImageBundle sageImageBundle, 
 			PortalGinInjector ginInjector) {
@@ -84,13 +84,10 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 			}
 		});
 		selectedCheckbox.addChangeHandler(new ChangeHandler() {
-
 			@Override
 			public void onChange(ChangeEvent event) {
-				boolean wasSelected = selectedCheckbox.getValue();
-//				presenter.entityBadgeSelected(wasSelected);
+				presenter.entitySelectedChange();
 			}
-			
 		});
 	}
 	

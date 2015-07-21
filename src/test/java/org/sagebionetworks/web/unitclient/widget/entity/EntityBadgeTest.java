@@ -32,8 +32,8 @@ import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.SynapseJSNIUtils;
 import org.sagebionetworks.web.client.cache.ClientCache;
 import org.sagebionetworks.web.client.place.Synapse;
-import org.sagebionetworks.web.client.widget.entity.EntityBadge;
-import org.sagebionetworks.web.client.widget.entity.EntityBadgeView;
+import org.sagebionetworks.web.client.widget.entity.EntityTreeItem;
+import org.sagebionetworks.web.client.widget.entity.EntityTreeItemView;
 import org.sagebionetworks.web.client.widget.entity.EntityIconsCache;
 import org.sagebionetworks.web.client.widget.entity.annotation.AnnotationTransformer;
 import org.sagebionetworks.web.client.widget.entity.dialog.ANNOTATION_TYPE;
@@ -57,9 +57,9 @@ public class EntityBadgeTest {
 	AdapterFactory adapterFactory = new AdapterFactoryImpl();
 	ClientCache mockClientCache;
 	AsyncCallback<KeyValueDisplay<String>> getInfoCallback;
-	EntityBadgeView mockView;
+	EntityTreeItemView mockView;
 	String entityId = "syn123";
-	EntityBadge widget;
+	EntityTreeItem widget;
 	AnnotationTransformer mockTransformer;
 	String rootWikiKeyId;
 	KeyValueDisplay<String> keyValueDisplay;
@@ -74,7 +74,7 @@ public class EntityBadgeTest {
 	public void before() throws JSONObjectAdapterException {
 		mockGlobalApplicationState = mock(GlobalApplicationState.class);
 		mockSynapseClient = mock(SynapseClientAsync.class);
-		mockView = mock(EntityBadgeView.class);
+		mockView = mock(EntityTreeItemView.class);
 		mockClientCache = mock(ClientCache.class);
 		mockEntityIconsCache = mock(EntityIconsCache.class);
 		getInfoCallback = mock(AsyncCallback.class);
@@ -83,7 +83,7 @@ public class EntityBadgeTest {
 		mockUserBadge = mock(UserBadge.class);
 		mockSynapseJSNIUtils = mock(SynapseJSNIUtils.class);
 		when(mockGlobalApplicationState.getPlaceChanger()).thenReturn(mockPlaceChanger);
-		widget = new EntityBadge(mockView, mockEntityIconsCache, mockSynapseClient, mockGlobalApplicationState, mockTransformer, mockUserBadge, mockSynapseJSNIUtils);
+		widget = new EntityTreeItem(mockView, mockEntityIconsCache, mockSynapseClient, mockGlobalApplicationState, mockTransformer, mockUserBadge, mockSynapseJSNIUtils);
 		
 		annotationList = new ArrayList<Annotation>();
 		annotationList.add(new Annotation(ANNOTATION_TYPE.STRING, "key1", Collections.EMPTY_LIST));

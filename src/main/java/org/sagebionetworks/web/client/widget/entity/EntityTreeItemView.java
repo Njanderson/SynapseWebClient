@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-public interface EntityBadgeView extends IsWidget, SynapseView {
+public interface EntityTreeItemView extends IsWidget, SynapseView {
 
 	/**
 	 * Set the presenter.
@@ -40,6 +40,7 @@ public interface EntityBadgeView extends IsWidget, SynapseView {
 		ImageResource getIconForType(String type);
 		void getInfo(String nodeId, final AsyncCallback<KeyValueDisplay<String>> callback);
 		void entityClicked(EntityQueryResult entityHeader);
+		void entitySelectedChange();
 	}
 
 	boolean getIsSelected();

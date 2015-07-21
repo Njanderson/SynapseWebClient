@@ -107,8 +107,8 @@ import org.sagebionetworks.web.client.widget.entity.DoiWidgetView;
 import org.sagebionetworks.web.client.widget.entity.DoiWidgetViewImpl;
 import org.sagebionetworks.web.client.widget.entity.EditRegisteredTeamDialogView;
 import org.sagebionetworks.web.client.widget.entity.EditRegisteredTeamDialogViewImpl;
-import org.sagebionetworks.web.client.widget.entity.EntityBadgeView;
-import org.sagebionetworks.web.client.widget.entity.EntityBadgeViewImpl;
+import org.sagebionetworks.web.client.widget.entity.EntityTreeItemView;
+import org.sagebionetworks.web.client.widget.entity.EntityTreeItemViewImpl;
 import org.sagebionetworks.web.client.widget.entity.EntityIconsCache;
 import org.sagebionetworks.web.client.widget.entity.EntityMetadataView;
 import org.sagebionetworks.web.client.widget.entity.EntityMetadataViewImpl;
@@ -942,7 +942,7 @@ public class PortalGinModule extends AbstractGinModule {
 		
 		bind(EntityIconsCache.class).in(Singleton.class);
 		
-		bind(EntityBadgeView.class).to(EntityBadgeViewImpl.class);
+		bind(EntityTreeItemView.class).to(EntityTreeItemViewImpl.class);
 		
 		bind(TutorialWizardView.class).to(TutorialWizardViewImpl.class);
 		

@@ -8,8 +8,8 @@
   xmlns:t="urn:import:org.sagebionetworks.web.client.view.bootstrap.table">
 	<t:Table ui:field="entityTable" width="100%" height="30px" addStyleNames="padding-2 light-border-bottom">
 		<t:TableRow>
-		    <t:TableData width="20px">
-		        <b:CheckBox ui:field="selectedCheckbox"/>
+		    <t:TableData width="20px" height="30px">
+		        <b:CheckBox ui:field="selectedCheckbox" addStyleNames="filesBrowserCheckbox"/>
 		    </t:TableData>
 			<t:TableData width="20px">
 				<g:SimplePanel ui:field="iconContainer"/>

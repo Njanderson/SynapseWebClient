@@ -9,7 +9,7 @@ import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.PortalGinInjector;
 import org.sagebionetworks.web.client.SageImageBundle;
 import org.sagebionetworks.web.client.view.PeopleSearchViewImpl;
-import org.sagebionetworks.web.client.widget.entity.EntityBadgeViewImpl.Binder;
+import org.sagebionetworks.web.client.widget.entity.EntityTreeItemViewImpl.Binder;
 import org.sagebionetworks.web.client.widget.entity.browse.EntityTreeBrowserViewImpl;
 import org.sagebionetworks.web.client.widget.team.BigTeamBadge;
 import org.sagebionetworks.web.client.widget.team.MemberListWidgetView;
