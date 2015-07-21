@@ -244,11 +244,11 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 	 * @param bundle
 	 * @return
 	 */
-	private BulkActionMenuWidget createEntityActionMenu(EntityBundle bundle, String wikiPageId){
+//	private BulkActionMenuWidget createEntityActionMenu(EntityBundle bundle, String wikiPageId){
 		// Create a menu
-		BulkActionMenuWidget actionMenu = ginInjector.createBulkActionMenuWidget();
+//		BulkActionMenuWidget actionMenu = ginInjector.createBulkActionMenuWidget();
 		// Create a controller.
-		final BulkActionController controller = ginInjector.createBulkActionController();
+//		final BulkActionController controller = ginInjector.createBulkActionController();
 //		actionMenu.addControllerWidget(controller);
 //		controller.configure(actionMenu, bundle, wikiPageId, new EntityUpdatedHandler() {
 //			@Override
@@ -265,7 +265,7 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 //				entityMetadata.setAnnotationsVisible(annotationsShown);
 //			}
 //		});
-		return actionMenu;
-	}
+//		return actionMenu;
+//	}
 	
 }

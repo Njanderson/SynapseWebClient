@@ -1,7 +1,6 @@
 package org.sagebionetworks.web.client.widget.entity.controller;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
@@ -10,7 +9,6 @@ import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.events.EntityUpdatedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.widget.entity.browse.FilesBrowser;
-import org.sagebionetworks.web.client.widget.entity.menu.v2.Action;
 import org.sagebionetworks.web.client.widget.entity.menu.v2.BulkActionMenuWidget;
 import org.sagebionetworks.web.client.widget.sharing.AccessControlListModalWidget;
 
