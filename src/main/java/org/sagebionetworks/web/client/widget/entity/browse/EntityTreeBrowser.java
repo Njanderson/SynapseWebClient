@@ -26,17 +26,20 @@ import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.events.EntitySelectedEvent;
 import org.sagebionetworks.web.client.events.EntitySelectedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
+import org.sagebionetworks.web.client.utils.Callback;
+import org.sagebionetworks.web.client.utils.CallbackP;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
-import org.sagebionetworks.web.client.widget.entity.EntityTreeItem;
+import org.sagebionetworks.web.client.widget.entity.EntityBadge;
 import org.sagebionetworks.web.client.widget.entity.MoreTreeItem;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
-		SynapseWidgetPresenter {
+		SynapseWidgetPresenter, IsWidget {
 	public static final long OFFSET_ZERO = 0;
 
 	private EntityTreeBrowserView view;
@@ -44,10 +47,13 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 	private AuthenticationController authenticationController;
 	private GlobalApplicationState globalApplicationState;
 	AdapterFactory adapterFactory;
-	private Set<EntityTreeItem> alreadyFetchedEntityChildren;
+	private Set<EntityBadge> alreadyFetchedEntityChildren;
+	private Set<EntityQueryResult> selectedEntities;
+	private CallbackP<EntityQueryResult> refreshBulkActionMenuCallback;
 	private PortalGinInjector ginInjector;
 	private String currentSelection;
 	private final int MAX_FOLDER_LIMIT = 100;
+	
 	EntitySelectedHandler entitySelectedHandler;
 	
 	@Inject
@@ -62,7 +68,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		this.globalApplicationState = globalApplicationState;
 		this.adapterFactory = adapterFactory;
 		this.ginInjector = ginInjector;
-		alreadyFetchedEntityChildren = new HashSet<EntityTreeItem>();
+		alreadyFetchedEntityChildren = new HashSet<EntityBadge>();
 		view.setPresenter(this);
 	}
 
@@ -82,13 +88,15 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 	 * 
 	 * @param entityId
 	 */
-	public void configure(String searchId) {
+	public void configure(String searchId, CallbackP<EntityQueryResult> refreshBulkActionMenuCallback) {
 		view.clear();
 		view.setLoadingVisible(true);
+		this.refreshBulkActionMenuCallback = refreshBulkActionMenuCallback;
 		getChildren(searchId, null, 0);
 	}
 
 	public void configure(List<EntityHeader> headers) {
+		// add refreshBulkActionMenuCallback?
 		view.clear();
 		view.setLoadingVisible(true);
 		EntityQueryResults results = getEntityQueryResultsFromHeaders(headers);
@@ -127,7 +135,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 
 	@Override
 	public void getChildren(final String parentId,
-			final EntityTreeItem parent, final long offset) {
+			final EntityBadge parent, final long offset) {
 		EntityQuery childrenQuery = createGetChildrenQuery(parentId, offset);
 		childrenQuery.setLimit((long) MAX_FOLDER_LIMIT);
 		// ask for the folder children, then the files
@@ -154,7 +162,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 								view.hideEmptyUI();
 							}
 						} else {
-							parent.showTypeIcon();
+							parent.hideLoadingIcon();
 						}
 					}
 
@@ -173,7 +181,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 	 */
 	@Override
 	public void addMoreButton(MoreTreeItem moreItem, String parentId,
-			EntityTreeItem parent, long offset) {
+			EntityBadge parent, long offset) {
 		if (parent == null) {
 			view.placeRootMoreTreeItem(moreItem, parentId, offset + MAX_FOLDER_LIMIT);
 		} else {
@@ -219,7 +227,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 	 * icon is appended below the folder.
 	 */
 	@Override
-	public void expandTreeItemOnOpen(final EntityTreeItem target) {
+	public void expandTreeItemOnOpen(final EntityBadge target) {
 		if (!alreadyFetchedEntityChildren.contains(target)) {
 			// We have not already fetched children for this entity.
 			alreadyFetchedEntityChildren.add(target);
@@ -256,14 +264,22 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		return newQuery;
 	}
 
-	public EntityTreeItem makeTreeItemFromQueryResult(EntityQueryResult header,
+	public EntityBadge makeTreeItemFromQueryResult(final EntityQueryResult header,
 			boolean isRootItem, boolean isExpandable) {
-		final EntityTreeItem childItem = ginInjector.getEntityTreeItemWidget();
-		childItem.configure(header, isRootItem, isExpandable);
+		final EntityBadge childItem = ginInjector.getEntityBadge();
+		childItem.configure(header, isRootItem, isExpandable, new Callback() {
+
+			@Override
+			public void invoke() {
+				selectedEntities.add(header);
+				refreshBulkActionMenuCallback.invoke(header);
+			}
+			
+		});
 		return childItem;
 	}
 
-	public void addResultsToParent(final EntityTreeItem parent,	EntityQueryResults results, long offset, boolean isExpandable) {
+	public void addResultsToParent(final EntityBadge parent, EntityQueryResults results, long offset, boolean isExpandable) {
 		if (parent == null) {
 			for (EntityQueryResult header : results.getEntities()) {
 				String entityType = header.getEntityType();
@@ -300,5 +316,15 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		return DisplayUtils.getSynapseIconForEntityClassName(
 				entityType.getClassForType().getName(), DisplayUtils.IconSize.PX16,
 				iconsImageBundle);
+	}
+	
+	public Set<EntityQueryResult> getSelectedEntities() {
+		Set<EntityQueryResult> selectedEntities = new HashSet<EntityQueryResult>();
+		for (EntityBadge item: alreadyFetchedEntityChildren) {
+			if (item.getIsSelected()) {
+				selectedEntities.add(item.getHeader());
+			}
+		}
+		return selectedEntities;
 	}
 }

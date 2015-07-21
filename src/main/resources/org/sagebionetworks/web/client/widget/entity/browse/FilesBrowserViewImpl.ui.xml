@@ -18,6 +18,8 @@
 				    Add Folder
 				</a:ActionButton>
 			</b:ButtonGroup>
+			<b:ButtonGroup>
+			</b:ButtonGroup>
 		</b:ButtonToolBar>
 		<g:SimplePanel ui:field="files" styleName="highlight-box padding-top-0-imp" />
 

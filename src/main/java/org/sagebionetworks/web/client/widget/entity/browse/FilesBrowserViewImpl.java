@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -113,14 +114,20 @@ public class FilesBrowserViewImpl implements FilesBrowserView {
 			}
 		});
 
-		Widget etbW = entityTreeBrowser.asWidget();
-		etbW.addStyleName("margin-top-10");
-		files.setWidget(etbW);
+//		Widget etbW = entityTreeBrowser.asWidget();
+//		etbW.addStyleName("margin-top-10");
+//		files.setWidget(etbW);
+	}
+	
+	@Override
+	public void setTreeBrowserWidget(IsWidget entityTreeBrowser) {
+		// can migrate style to XML?
+		entityTreeBrowser.asWidget().addStyleName("margin-top-10");
+		files.setWidget(entityTreeBrowser);
 	}
 
 	@Override
-	public void configure(String entityId, boolean canCertifiedUserAddChild) {
-		entityTreeBrowser.configure(entityId);
+	public void configure(boolean canCertifiedUserAddChild) {
 		if (canCertifiedUserAddChild) {
 			topBar.setVisible(true);
 		}
@@ -189,11 +196,6 @@ public class FilesBrowserViewImpl implements FilesBrowserView {
 	@Override
 	public void clear() {
 		topBar.setVisible(false);
-	}
-
-	@Override
-	public void refreshTreeView(String entityId) {
-		entityTreeBrowser.configure(entityId);
 	}
 
 	@Override

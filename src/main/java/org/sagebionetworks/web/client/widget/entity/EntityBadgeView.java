@@ -1,6 +1,5 @@
 package org.sagebionetworks.web.client.widget.entity;
 
-import org.sagebionetworks.repo.model.EntityHeader;
 import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 import org.sagebionetworks.web.client.SynapseView;
 import org.sagebionetworks.web.shared.KeyValueDisplay;
@@ -9,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface EntityBadgeView extends IsWidget, SynapseView {
@@ -32,7 +32,6 @@ public interface EntityBadgeView extends IsWidget, SynapseView {
 	void setModifiedOn(String modifiedOnString);
 	
 	void setModifiedByWidget(Widget w);
-	void setModifiedByWidgetVisible(boolean visible);
 	
 	/**
 	 * Presenter interface
@@ -42,6 +41,12 @@ public interface EntityBadgeView extends IsWidget, SynapseView {
 		void getInfo(String nodeId, final AsyncCallback<KeyValueDisplay<String>> callback);
 		void entityClicked(EntityQueryResult entityHeader);
 	}
+
+	boolean getIsSelected();
+
+	TreeItem asTreeItem();
+
+	void setModifiedByWidgetVisible(boolean b);
 
 	
 

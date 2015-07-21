@@ -67,7 +67,7 @@ public class FilesBrowserTest {
 		String entityId = "syn123";
 		boolean canCertifiedUserAddChild = false;
 		filesBrowser.configure(entityId, canCertifiedUserAddChild, true);
-		verify(mockView).configure(entityId, canCertifiedUserAddChild);
+		verify(mockView).configure(canCertifiedUserAddChild);
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class FilesBrowserTest {
 		String entityId = "syn123";
 		boolean canCertifiedUserAddChild = true;
 		filesBrowser.configure(entityId, canCertifiedUserAddChild, true);
-		verify(mockView).configure(entityId, canCertifiedUserAddChild);
+		verify(mockView).configure(canCertifiedUserAddChild);
 	}
 
 	

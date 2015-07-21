@@ -2,8 +2,7 @@ package org.sagebionetworks.web.client.widget.entity.browse;
 
 import org.sagebionetworks.repo.model.Entity;
 import org.sagebionetworks.repo.model.Folder;
-import org.sagebionetworks.schema.adapter.AdapterFactory;
-import org.sagebionetworks.schema.adapter.JSONObjectAdapterException;
+import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 import org.sagebionetworks.web.client.DisplayConstants;
 import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.GlobalApplicationState;
@@ -13,6 +12,7 @@ import org.sagebionetworks.web.client.cookie.CookieProvider;
 import org.sagebionetworks.web.client.events.EntityUpdatedEvent;
 import org.sagebionetworks.web.client.events.EntityUpdatedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
+import org.sagebionetworks.web.client.utils.CallbackP;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,27 +24,27 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 	private FilesBrowserView view;
 	private String configuredEntityId;
 	private SynapseClientAsync synapseClient;
-	private AdapterFactory adapterFactory;
 	private EntityUpdatedHandler entityUpdatedHandler;
 	GlobalApplicationState globalApplicationState;
 	AuthenticationController authenticationController;
 	CookieProvider cookies;
 	boolean isCertifiedUser,canCertifiedUserAddChild;
 	private String currentFolderEntityId;
+	private EntityTreeBrowser entityTreeBrowser;
 	
 	@Inject
 	public FilesBrowser(FilesBrowserView view,
 			SynapseClientAsync synapseClient,
-			AdapterFactory adapterFactory,
 			GlobalApplicationState globalApplicationState,
 			AuthenticationController authenticationController,
-			CookieProvider cookies) {
+			CookieProvider cookies, EntityTreeBrowser entityTreeBrowser) {
+		this.entityTreeBrowser = entityTreeBrowser;
 		this.view = view;		
 		this.synapseClient = synapseClient;
-		this.adapterFactory = adapterFactory;
 		this.globalApplicationState = globalApplicationState;
 		this.authenticationController = authenticationController;
 		this.cookies = cookies;
+		view.setTreeBrowserWidget(entityTreeBrowser);
 		view.setPresenter(this);
 	}	
 	
@@ -57,7 +57,14 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 		this.configuredEntityId = entityId;
 		this.isCertifiedUser = isCertifiedUser;
 		this.canCertifiedUserAddChild = canCertifiedUserAddChild;
-		view.configure(entityId, canCertifiedUserAddChild);
+		view.configure(canCertifiedUserAddChild);
+		entityTreeBrowser.configure(entityId, new CallbackP<EntityQueryResult>() {
+			@Override
+			public void invoke(EntityQueryResult selectedEntity) {
+				updateBulkActionMenu(selectedEntity);
+			}
+			
+		});
 		currentFolderEntityId = null;
 	}
 	
@@ -139,8 +146,14 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 		synapseClient.deleteEntityById(currentFolderEntityId, skipTrashCan, new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void na) {
-				//folder is deleted when folder creation is canceled.  refresh the tree for updated information 
-				view.refreshTreeView(configuredEntityId);
+				//folder is deleted when folder creation is canceled.  refresh the tree for updated information
+				entityTreeBrowser.configure(configuredEntityId, new CallbackP<EntityQueryResult>() {
+					@Override
+					public void invoke(EntityQueryResult selectedEntity) {
+						updateBulkActionMenu(selectedEntity);
+					}
+					
+				});
 				view.setNewFolderDialogVisible(false);
 			}
 			@Override
@@ -155,7 +168,13 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 			@Override
 			public void onSuccess(Entity result) {
 				view.showInfo("Folder '" + folder.getName() + "' Added", "");
-				view.refreshTreeView(configuredEntityId);
+				entityTreeBrowser.configure(configuredEntityId, new CallbackP<EntityQueryResult>() {
+					@Override
+					public void invoke(EntityQueryResult selectedEntity) {
+						updateBulkActionMenu(selectedEntity);
+					}
+					
+				});
 				view.setNewFolderDialogVisible(false);
 			}
 			@Override
@@ -200,5 +219,10 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 
 	public void showUploadFile() {
 		view.showUploadDialog(this.configuredEntityId);
+	}
+
+	@Override
+	public void updateBulkActionMenu(EntityQueryResult selectedEntity) {
+		
 	}
 }

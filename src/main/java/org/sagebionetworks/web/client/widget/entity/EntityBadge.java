@@ -11,6 +11,7 @@ import org.sagebionetworks.web.client.GlobalApplicationState;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.SynapseJSNIUtils;
 import org.sagebionetworks.web.client.place.Synapse;
+import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
 import org.sagebionetworks.web.client.widget.entity.annotation.AnnotationTransformer;
 import org.sagebionetworks.web.client.widget.entity.dialog.Annotation;
@@ -23,10 +24,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsTreeItem;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPresenter {
+public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPresenter, IsTreeItem {
 	
 	private EntityBadgeView view;
 	private EntityIconsCache iconsCache;
@@ -36,6 +39,8 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 	private AnnotationTransformer transformer;
 	private UserBadge modifiedByUserBadge;
 	private SynapseJSNIUtils synapseJSNIUtils;
+	private TreeItem treeItem;
+	private boolean isExpandable;
 	
 	@Inject
 	public EntityBadge(EntityBadgeView view, 
@@ -56,8 +61,9 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 		view.setModifiedByWidget(modifiedByUserBadge.asWidget());
 	}
 	
-	public void configure(EntityQueryResult header) {
+	public void configure(EntityQueryResult header, boolean isRootItem, boolean isExpandable, Callback selectChangeCallback) {
 		entityHeader = header;
+		treeItem = new TreeItem(asWidget());
 		view.setEntity(header);
 		
 		if (header.getModifiedByPrincipalId() != null) {
@@ -73,15 +79,29 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 		} else {
 			view.setModifiedOn("");
 		}
+		
+		this.isExpandable = isExpandable;
+		if (isRootItem)
+			treeItem.addStyleName("entityTreeItem padding-left-0-imp");
+		else
+			treeItem.addStyleName("entityTreeItem");
 	}
 	
-	@SuppressWarnings("unchecked")
+	public boolean isExpandable() {
+		return isExpandable;
+	}
+	
 	public void clearState() {
 	}
 
 	@Override
 	public Widget asWidget() {
 		return view.asWidget();
+	}
+	
+	@Override
+	public TreeItem asTreeItem() {
+		return treeItem;
 	}
 	
 	@Override
@@ -128,6 +148,10 @@ public class EntityBadge implements EntityBadgeView.Presenter, SynapseWidgetPres
 			order.add("*Note");
 			map.put("*Note", "Has a wiki");
 		}
+	}
+	
+	public boolean getIsSelected() {
+		return view.getIsSelected();
 	}
 	
 	@Override

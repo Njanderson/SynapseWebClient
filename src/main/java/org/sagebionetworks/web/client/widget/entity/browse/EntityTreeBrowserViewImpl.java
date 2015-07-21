@@ -3,13 +3,12 @@ package org.sagebionetworks.web.client.widget.entity.browse;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.sagebionetworks.web.client.DisplayConstants;
 import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.IconsImageBundle;
 import org.sagebionetworks.web.client.view.bootstrap.table.Table;
-import org.sagebionetworks.web.client.widget.entity.EntityTreeItem;
+import org.sagebionetworks.web.client.widget.entity.EntityBadge;
 import org.sagebionetworks.web.client.widget.entity.MoreTreeItem;
 
 import com.google.gwt.core.client.GWT;
@@ -40,8 +39,8 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	private IconsImageBundle iconsImageBundle;
 
 	private boolean isSelectable = false;
-	private Map<TreeItem, EntityTreeItem> treeItem2entityTreeItem;
-	private EntityTreeItem selectedItem;
+	private Map<TreeItem, EntityBadge> treeItem2entityTreeItem;
+	private EntityBadge selectedItem;
 	public interface Binder extends UiBinder<Widget, EntityTreeBrowserViewImpl> {}
 
 	
@@ -62,14 +61,14 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	public EntityTreeBrowserViewImpl(IconsImageBundle iconsImageBundle,
 			Binder uiBinder) {
 		this.iconsImageBundle = iconsImageBundle;
-		treeItem2entityTreeItem = new HashMap<TreeItem, EntityTreeItem>();
+		treeItem2entityTreeItem = new HashMap<TreeItem, EntityBadge>();
 		entityTree = new Tree(new EntityTreeResources());
 		this.widget = uiBinder.createAndBindUi(this);
 		// On open, it will call expandTreeItemOnOpen, which starts a loading message.
 		entityTree.addOpenHandler(new OpenHandler<TreeItem>() {
 			@Override
 			public void onOpen(OpenEvent<TreeItem> event) {
-				final EntityTreeItem target = treeItem2entityTreeItem.get(event
+				final EntityBadge target = treeItem2entityTreeItem.get(event
 						.getTarget());
 				presenter.expandTreeItemOnOpen(target);
 			}
@@ -129,7 +128,7 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 		entityTree.addSelectionHandler(new SelectionHandler<TreeItem>() {
 			@Override
 			public void onSelection(SelectionEvent<TreeItem> event) {
-				final EntityTreeItem targetItem = treeItem2entityTreeItem
+				final EntityBadge targetItem = treeItem2entityTreeItem
 						.get(event.getSelectedItem());
 				selectEntity(targetItem);
 			}
@@ -139,7 +138,7 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 
 	// When empty...
 	@Override
-	public void appendRootEntityTreeItem(final EntityTreeItem childToAdd) {
+	public void appendRootEntityTreeItem(final EntityBadge childToAdd) {
 		configureEntityTreeItem(childToAdd);
 		// Place the created child in the tree as the child of the given parent
 		// entity.
@@ -147,7 +146,7 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	}
 
 	@Override
-	public void configureEntityTreeItem(final EntityTreeItem childToAdd) {
+	public void configureEntityTreeItem(final EntityBadge childToAdd) {
 		if (isSelectable) {
 			// Add select functionality.
 			childToAdd.asTreeItem().addItem(createDummyItem());
@@ -169,8 +168,8 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	}
 
 	@Override
-	public void appendChildEntityTreeItem(final EntityTreeItem childToAdd,
-			EntityTreeItem parent) {
+	public void appendChildEntityTreeItem(final EntityBadge childToAdd,
+			EntityBadge parent) {
 		// (Re)move the error to presenter
 		configureEntityTreeItem(childToAdd);
 		// Place the created child in the tree as the child of the given parent
@@ -210,7 +209,7 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	 */
 	@Override
 	public void placeChildMoreTreeItem(final MoreTreeItem childToCreate,
-			final EntityTreeItem parent, final long offset) {
+			final EntityBadge parent, final long offset) {
 		childToCreate.setClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -226,7 +225,7 @@ public class EntityTreeBrowserViewImpl extends FlowPanel implements
 	 * Private Methods
 	 */
 
-	private void selectEntity(EntityTreeItem itemToSelect) {
+	private void selectEntity(EntityBadge itemToSelect) {
 		if (selectedItem != null) {
 			selectedItem.asWidget().removeStyleName("entityTreeItem-selected");
 		}

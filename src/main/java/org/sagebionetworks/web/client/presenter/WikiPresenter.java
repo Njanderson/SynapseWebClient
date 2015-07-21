@@ -6,6 +6,7 @@ import org.sagebionetworks.web.client.RssServiceAsync;
 import org.sagebionetworks.web.client.place.WikiPlace;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.view.WikiView;
+import org.sagebionetworks.web.client.widget.entity.controller.SynapseAlert;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -28,7 +29,7 @@ public class WikiPresenter extends AbstractActivity implements WikiView.Presente
 	
 	@Inject
 	public WikiPresenter(WikiView view, 
-			AuthenticationController authenticationController, 
+			AuthenticationController authenticationController,
 			GlobalApplicationState globalApplicationState, 
 			RssServiceAsync rssService){
 		this.authenticationController = authenticationController;

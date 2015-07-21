@@ -1,5 +1,6 @@
 package org.sagebionetworks.web.client.widget.entity;
 
+import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.Tooltip;
 import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 import org.sagebionetworks.web.client.DisplayConstants;
@@ -7,9 +8,12 @@ import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.PortalGinInjector;
 import org.sagebionetworks.web.client.SageImageBundle;
 import org.sagebionetworks.web.client.SynapseJSNIUtils;
+import org.sagebionetworks.web.client.view.bootstrap.table.Table;
 import org.sagebionetworks.web.client.widget.provenance.ProvViewUtil;
 import org.sagebionetworks.web.shared.KeyValueDisplay;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -28,6 +32,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -37,8 +42,9 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 	SynapseJSNIUtils synapseJSNIUtils;
 	SageImageBundle sageImageBundle;
 	Widget modifiedByWidget;
+	Widget widget;
 	public interface Binder extends UiBinder<Widget, EntityBadgeViewImpl> {	}
-	
+
 	@UiField
 	Tooltip tooltip;
 	@UiField
@@ -47,11 +53,14 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 	FlowPanel entityContainer;
 	@UiField
 	TextBox idField;
-	
+	@UiField
+	CheckBox selectedCheckbox;
 	@UiField
 	SimplePanel modifiedByField;
 	@UiField
 	Label modifiedOnField;
+	@UiField
+	Table entityTable;
 	
 	Image iconPicture;
 	ClickHandler nonDefaultClickHandler;
@@ -64,17 +73,31 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 			SynapseJSNIUtils synapseJSNIUtils,
 			SageImageBundle sageImageBundle, 
 			PortalGinInjector ginInjector) {
+		this.widget = uiBinder.createAndBindUi(this);
 		this.synapseJSNIUtils = synapseJSNIUtils;
 		this.sageImageBundle = sageImageBundle;
-		initWidget(uiBinder.createAndBindUi(this));
+//		initWidget(uiBinder.createAndBindUi(this));
 		idField.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				idField.selectAll();
 			}
 		});
+		selectedCheckbox.addChangeHandler(new ChangeHandler() {
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				boolean wasSelected = selectedCheckbox.getValue();
+//				presenter.entityBadgeSelected(wasSelected);
+			}
+			
+		});
 	}
 	
+	@Override
+	public boolean getIsSelected() {
+		return selectedCheckbox.getValue();
+	}
 	
 	@Override
 	public void setEntity(final EntityQueryResult entityHeader) {
@@ -227,8 +250,14 @@ public class EntityBadgeViewImpl extends Composite implements EntityBadgeView {
 		modifiedByWidget.setVisible(visible);
 	}
 	
-	/*
-	 * Private Methods
-	 */
+	@Override
+	public Widget asWidget() {
+		return widget;
+	}
+
+	@Override
+	public TreeItem asTreeItem() {
+		return new TreeItem(widget);
+	}
 
 }

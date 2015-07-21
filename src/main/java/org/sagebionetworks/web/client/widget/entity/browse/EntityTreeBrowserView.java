@@ -1,7 +1,7 @@
 package org.sagebionetworks.web.client.widget.entity.browse;
 
 import org.sagebionetworks.web.client.SynapseView;
-import org.sagebionetworks.web.client.widget.entity.EntityTreeItem;
+import org.sagebionetworks.web.client.widget.entity.EntityBadge;
 import org.sagebionetworks.web.client.widget.entity.MoreTreeItem;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -29,26 +29,26 @@ public interface EntityTreeBrowserView extends IsWidget, SynapseView {
 
 		int getMaxLimit();
 		
-		void expandTreeItemOnOpen(final EntityTreeItem target);
+		void expandTreeItemOnOpen(final EntityBadge target);
 		
 		void clearRecordsFetchedChildren();
 
 		void addMoreButton(MoreTreeItem moreItem, String parentId,
-				EntityTreeItem parent, long offset);
+				EntityBadge parent, long offset);
 
-		void getChildren(String parentId, EntityTreeItem parent, long offset);
+		void getChildren(String parentId, EntityBadge parent, long offset);
 
 	}
 
-	void appendRootEntityTreeItem(EntityTreeItem childToAdd);
+	void appendRootEntityTreeItem(EntityBadge childToAdd);
 
-	void appendChildEntityTreeItem(EntityTreeItem childToAdd,
-			EntityTreeItem parent);
+	void appendChildEntityTreeItem(EntityBadge childToAdd,
+			EntityBadge parent);
 
-	void configureEntityTreeItem(EntityTreeItem childToAdd);
+	void configureEntityTreeItem(EntityBadge childToAdd);
 
 	void placeChildMoreTreeItem(MoreTreeItem childToCreate,
-			EntityTreeItem parent, long offset);
+			EntityBadge parent, long offset);
 
 	void placeRootMoreTreeItem(MoreTreeItem childToCreate,
 			String parentId, long offset);
