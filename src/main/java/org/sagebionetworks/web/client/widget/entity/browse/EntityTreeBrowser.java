@@ -1,11 +1,15 @@
 package org.sagebionetworks.web.client.widget.entity.browse;
 
+import static org.sagebionetworks.repo.model.EntityBundle.ENTITY;
+import static org.sagebionetworks.repo.model.EntityBundle.PERMISSIONS;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.sagebionetworks.repo.model.EntityBundle;
 import org.sagebionetworks.repo.model.EntityHeader;
 import org.sagebionetworks.repo.model.EntityType;
 import org.sagebionetworks.repo.model.entity.query.Condition;
@@ -27,20 +31,22 @@ import org.sagebionetworks.web.client.events.EntitySelectedEvent;
 import org.sagebionetworks.web.client.events.EntitySelectedHandler;
 import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.utils.Callback;
-import org.sagebionetworks.web.client.utils.CallbackP;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
 import org.sagebionetworks.web.client.widget.entity.EntityTreeItem;
 import org.sagebionetworks.web.client.widget.entity.MoreTreeItem;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+
 public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		SynapseWidgetPresenter, IsWidget {
 	public static final long OFFSET_ZERO = 0;
+	
 
 	private EntityTreeBrowserView view;
 	private SynapseClientAsync synapseClient;
@@ -48,7 +54,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 	private GlobalApplicationState globalApplicationState;
 	AdapterFactory adapterFactory;
 	private Set<EntityTreeItem> alreadyFetchedEntityChildren;
-	private Set<EntityQueryResult> selectedEntities;
+	private Set<EntityBundle> selectedEntities;
 	private Callback refreshBulkActionMenuCallback;
 	private PortalGinInjector ginInjector;
 	private String currentSelection;
@@ -69,6 +75,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		this.adapterFactory = adapterFactory;
 		this.ginInjector = ginInjector;
 		alreadyFetchedEntityChildren = new HashSet<EntityTreeItem>();
+		selectedEntities = new HashSet<EntityBundle>();
 		view.setPresenter(this);
 	}
 
@@ -270,8 +277,20 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 		childItem.configure(header, isRootItem, isExpandable, new Callback() {
 			@Override
 			public void invoke() {
-				selectedEntities.add(header);
-				refreshBulkActionMenuCallback.invoke();
+				GWT.debugger();
+				// loading callback?
+				synapseClient.getEntityBundle(header.getId(), ENTITY | PERMISSIONS, new AsyncCallback<EntityBundle>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// should pass error to the BulkActionMenuWidget
+					}
+
+					@Override
+					public void onSuccess(EntityBundle result) {
+						selectedEntities.add(result);
+						refreshBulkActionMenuCallback.invoke();
+					}
+				});
 			}
 			
 		});
@@ -317,13 +336,7 @@ public class EntityTreeBrowser implements EntityTreeBrowserView.Presenter,
 				iconsImageBundle);
 	}
 	
-	public Set<EntityQueryResult> getSelectedEntities() {
-		Set<EntityQueryResult> selectedEntities = new HashSet<EntityQueryResult>();
-		for (EntityTreeItem item: alreadyFetchedEntityChildren) {
-			if (item.getIsSelected()) {
-				selectedEntities.add(item.getHeader());
-			}
-		}
+	public Set<EntityBundle> getSelectedEntities() {
 		return selectedEntities;
 	}
 }

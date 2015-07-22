@@ -1,15 +1,10 @@
 package org.sagebionetworks.web.client.widget.entity.browse;
 
-import java.util.Set;
-
 import org.sagebionetworks.repo.model.Entity;
-import org.sagebionetworks.repo.model.EntityBundle;
 import org.sagebionetworks.repo.model.Folder;
-import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 import org.sagebionetworks.web.client.DisplayConstants;
 import org.sagebionetworks.web.client.DisplayUtils;
 import org.sagebionetworks.web.client.GlobalApplicationState;
-import org.sagebionetworks.web.client.PortalGinInjector;
 import org.sagebionetworks.web.client.SynapseClientAsync;
 import org.sagebionetworks.web.client.UploadView;
 import org.sagebionetworks.web.client.cookie.CookieProvider;
@@ -19,10 +14,6 @@ import org.sagebionetworks.web.client.security.AuthenticationController;
 import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.widget.SynapseWidgetPresenter;
 import org.sagebionetworks.web.client.widget.entity.controller.BulkActionController;
-import org.sagebionetworks.web.client.widget.entity.controller.EntityActionController;
-import org.sagebionetworks.web.client.widget.entity.menu.v2.Action;
-import org.sagebionetworks.web.client.widget.entity.menu.v2.ActionMenuWidget;
-import org.sagebionetworks.web.client.widget.entity.menu.v2.ActionMenuWidget.ActionListener;
 import org.sagebionetworks.web.client.widget.entity.menu.v2.BulkActionMenuWidget;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,7 +32,8 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 	boolean isCertifiedUser,canCertifiedUserAddChild;
 	private String currentFolderEntityId;
 	private EntityTreeBrowser entityTreeBrowser;
-	private PortalGinInjector ginInjector;
+	private BulkActionMenuWidget bulkActionMenu;
+	private BulkActionController bulkActionController;
 	
 	@Inject
 	public FilesBrowser(FilesBrowserView view,
@@ -49,15 +41,19 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 			GlobalApplicationState globalApplicationState,
 			AuthenticationController authenticationController,
 			CookieProvider cookies, EntityTreeBrowser entityTreeBrowser,
-			PortalGinInjector ginInjector) {
-		this.ginInjector = ginInjector;
+			BulkActionMenuWidget bulkActionMenu, BulkActionController bulkActionController) {
+		this.bulkActionMenu = bulkActionMenu;
+		this.bulkActionController = bulkActionController;
 		this.entityTreeBrowser = entityTreeBrowser;
 		this.view = view;		
 		this.synapseClient = synapseClient;
 		this.globalApplicationState = globalApplicationState;
 		this.authenticationController = authenticationController;
 		this.cookies = cookies;
+		bulkActionController.configure(bulkActionMenu, this);
+		bulkActionMenu.addControllerWidget(bulkActionController);
 		view.setTreeBrowserWidget(entityTreeBrowser);
+		view.setBulkActionMenuWidget(bulkActionMenu);
 		view.setPresenter(this);
 	}	
 	
@@ -236,7 +232,7 @@ public class FilesBrowser implements FilesBrowserView.Presenter, SynapseWidgetPr
 
 	@Override
 	public void updateBulkActionMenu() {
-		Set<EntityQueryResult> selectedEntities = entityTreeBrowser.getSelectedEntities();
+		bulkActionController.refreshMenu(entityTreeBrowser.getSelectedEntities());
 	}
 	
 	/**

@@ -20,6 +20,7 @@ import org.sagebionetworks.web.client.widget.user.UserBadge;
 import org.sagebionetworks.web.shared.EntityBundlePlus;
 import org.sagebionetworks.web.shared.KeyValueDisplay;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -180,6 +181,7 @@ public class EntityTreeItem implements EntityTreeItemView.Presenter, SynapseWidg
 
 	@Override
 	public void entitySelectedChange() {
+		GWT.debugger();
 		selectChangeCallback.invoke();
 	}
 

@@ -4,13 +4,13 @@
 	xmlns:b="urn:import:org.gwtbootstrap3.client.ui" xmlns:t="urn:import:org.sagebionetworks.web.client.widget.table.v2"
 	xmlns:a="urn:import:org.sagebionetworks.web.client.widget.entity.menu.v2"
 	xmlns:bg="urn:import:org.gwtbootstrap3.client.ui.gwt" xmlns:bh="urn:import:org.gwtbootstrap3.client.ui.html">
-	<g:HTMLPanel>
+	<g:HTMLPanel >
 		<b:ButtonGroup>
 			<b:DropDown>
 				<b:Button icon="SERVER" dataToggle="DROPDOWN">Bulk Action</b:Button>
 				<b:DropDownMenu ui:field="actionsDropDown"
 					addStyleNames="dropdown-menu-right">
-					<a:ActionMenuItem icon="EDIT" action="CHANGE_ENTITY_NAME">Change Name</a:ActionMenuItem>
+					<!--  <a:ActionMenuItem icon="EDIT" action="CHANGE_ENTITY_NAME">Change Name</a:ActionMenuItem>
 					<a:ActionMenuItem icon="UPLOAD" action="UPLOAD_NEW_FILE">Upload a New Version of the File</a:ActionMenuItem>
 					<a:ActionMenuItem icon="NEWSPAPER_O" action="EDIT_WIKI_PAGE">Edit Wiki</a:ActionMenuItem>
 					<a:ActionMenuItem icon="NEWSPAPER_O" action="VIEW_WIKI_SOURCE">View Wiki Source</a:ActionMenuItem>
@@ -20,7 +20,7 @@
 					<a:ActionMenuItem icon="ARROWS" action="MOVE_ENTITY">Move</a:ActionMenuItem>
 					<a:ActionMenuItem action="CREATE_DOI">Create DOI</a:ActionMenuItem>
 					<a:ActionMenuItem icon="DATABASE" action="CHANGE_STORAGE_LOCATION">Change Storage Location</a:ActionMenuItem>
-					<a:ActionMenuItem icon="LINK" action="CREATE_LINK">Save Link to This Page</a:ActionMenuItem>
+					<a:ActionMenuItem icon="LINK" action="CREATE_LINK">Save Link to This Page</a:ActionMenuItem>-->
 					<a:ActionMenuItem icon="TRASH_O" action="DELETE_ENTITY">Delete</a:ActionMenuItem>
 				</b:DropDownMenu>
 			</b:DropDown>

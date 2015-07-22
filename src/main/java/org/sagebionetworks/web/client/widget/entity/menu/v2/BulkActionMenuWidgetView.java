@@ -1,6 +1,7 @@
 package org.sagebionetworks.web.client.widget.entity.menu.v2;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.sagebionetworks.web.client.widget.entity.menu.v2.ActionMenuWidget.ActionListener;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -17,9 +18,13 @@ public interface BulkActionMenuWidgetView extends IsWidget {
 		void setActionText(Action action, String text);
 
 		void setActionIcon(Action action, IconType icon);
+
+		void addActionListener(Action action, ActionListener listener);
 		
 	}
 
 	void setControllerWidget(IsWidget controller);
+
+	Iterable<ActionView> listActionViews();
 
 }

@@ -1,6 +1,7 @@
 package org.sagebionetworks.web.client.widget.entity.menu.v2;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-public class BulkActionMenuWidget implements BulkActionMenuWidgetView.Presenter {
+public class BulkActionMenuWidget implements BulkActionMenuWidgetView.Presenter, ActionListener {
 	
 	private BulkActionMenuWidgetView view;
 	
@@ -23,6 +24,22 @@ public class BulkActionMenuWidget implements BulkActionMenuWidgetView.Presenter 
 		this.view = view;
 		this.actionViewMap = new HashMap<Action, ActionView>();
 		this.actionListenerMap = new HashMap<Action, List<ActionListener>>();
+		// synchronize with the view
+		for (ActionView av : this.view.listActionViews()) {
+			Action action = av.getAction();
+			if (action == null) {
+				throw new IllegalArgumentException(
+						"ActionView has a null action");
+			}
+			if (this.actionViewMap.containsKey(action)) {
+				throw new IllegalArgumentException("Action " + action
+						+ " was applied to more than one ActionView");
+			}
+			this.actionViewMap.put(av.getAction(), av);
+			av.addActionListener(this);
+			this.actionListenerMap.put(av.getAction(),
+					new LinkedList<ActionListener>());
+		}
 	}
 	
 	@Override
@@ -80,6 +97,18 @@ public class BulkActionMenuWidget implements BulkActionMenuWidgetView.Presenter 
 					"No action list found for action: " + action);
 		}
 		return list;
+	}
+	
+	@Override
+	public void addActionListener(Action action, ActionListener listener) {
+		getActionListeners(action).add(listener);
+	}
+
+	@Override
+	public void onAction(Action action) {
+		for (ActionListener listener : getActionListeners(action)) {
+			listener.onAction(action);
+		}		
 	}
 	
 }
