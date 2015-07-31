@@ -9,6 +9,7 @@ import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.widget.entity.EntityMetadataView.Presenter;
 import org.sagebionetworks.web.client.widget.entity.annotation.AnnotationsRendererWidget;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -46,6 +47,7 @@ public class EntityMetadata implements Presenter {
 		return view.asWidget();
 	}
 	public void setEntityBundle(EntityBundle bundle, Long versionNumber) {
+		GWT.debugger();
 		clear();
 		Entity en = bundle.getEntity();
 		boolean canEdit = bundle.getPermissions().getCanCertifiedUserEdit();

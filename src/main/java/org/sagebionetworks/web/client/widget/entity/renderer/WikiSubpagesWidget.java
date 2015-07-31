@@ -19,6 +19,7 @@ import org.sagebionetworks.web.shared.PaginatedResults;
 import org.sagebionetworks.web.shared.WikiPageKey;
 import org.sagebionetworks.web.shared.exceptions.NotFoundException;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -53,6 +54,7 @@ public class WikiSubpagesWidget implements WikiSubpagesView.Presenter, IsWidget 
 	@Override
 	public void configure(final WikiPageKey wikiKey, Callback widgetRefreshRequired, 
 			boolean embeddedInOwnerPage, CallbackP<WikiPageKey> reloadWikiPageCallback) {
+		GWT.debugger();
 		canEdit = false;
 		this.reloadWikiPageCallback = reloadWikiPageCallback;
 		this.wikiKey = wikiKey;
@@ -102,6 +104,7 @@ public class WikiSubpagesWidget implements WikiSubpagesView.Presenter, IsWidget 
 	}
 	
 	public void refreshTableOfContents() {
+		GWT.debugger();
 		view.clear();
 		
 		synapseClient.getV2WikiHeaderTree(wikiKey.getOwnerObjectId(), wikiKey.getOwnerObjectType(), new AsyncCallback<PaginatedResults<V2WikiHeader>>() {

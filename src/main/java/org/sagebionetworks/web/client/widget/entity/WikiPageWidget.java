@@ -130,6 +130,7 @@ public class WikiPageWidget implements WikiPageWidgetView.Presenter, SynapseWidg
 	
 	public void configure(final WikiPageKey wikiKey, final Boolean canEdit,
 			final Callback callback, final boolean isEmbeddedInOwnerPage) {
+		GWT.debugger();
 		clear();
 		view.showMainPanel();
 		view.showLoading();

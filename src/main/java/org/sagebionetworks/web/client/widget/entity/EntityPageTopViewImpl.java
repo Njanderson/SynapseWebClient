@@ -27,7 +27,6 @@ import org.sagebionetworks.web.client.events.EntityUpdatedEvent;
 import org.sagebionetworks.web.client.events.EntityUpdatedHandler;
 import org.sagebionetworks.web.client.place.Synapse;
 import org.sagebionetworks.web.client.place.Synapse.EntityArea;
-import org.sagebionetworks.web.client.utils.Callback;
 import org.sagebionetworks.web.client.utils.CallbackP;
 import org.sagebionetworks.web.client.widget.breadcrumb.Breadcrumb;
 import org.sagebionetworks.web.client.widget.entity.browse.FilesBrowser;
@@ -45,6 +44,7 @@ import org.sagebionetworks.web.shared.WebConstants;
 import org.sagebionetworks.web.shared.WidgetConstants;
 import org.sagebionetworks.web.shared.WikiPageKey;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -300,6 +300,7 @@ public class EntityPageTopViewImpl extends Composite implements EntityPageTopVie
 	@Override
 	public void setEntityBundle(EntityBundle bundle, UserProfile userProfile,
 			String entityTypeDisplay, Long versionNumber, Synapse.EntityArea area, String areaToken, EntityHeader projectHeader, String wikiPageId) {
+		GWT.debugger();
 		this.versionNumber = versionNumber;
 		this.currentArea = area;
 		DisplayUtils.hide(adminListItem);
@@ -421,7 +422,7 @@ public class EntityPageTopViewImpl extends Composite implements EntityPageTopVie
 	 * Private Methods
 	 */
 	// Render the File entity	
-	private void renderFileEntity(final EntityBundle bundle, String entityTypeDisplay, Long versionNumber, final String wikiPageId, EntityHeader projectHeader) {
+	private void renderFileEntity(EntityBundle bundle, String entityTypeDisplay, Long versionNumber, final String wikiPageId, EntityHeader projectHeader) {
 		// tab container
 		setTabSelected(EntityArea.FILES, false); // select files tab for file
 		
@@ -533,7 +534,8 @@ public class EntityPageTopViewImpl extends Composite implements EntityPageTopVie
 	// Render the Project entity
 	private void renderProjectEntity(final EntityBundle bundle,
 			String entityTypeDisplay,
-			Synapse.EntityArea area, String wikiPageId) {		
+			Synapse.EntityArea area, String wikiPageId) {
+		GWT.debugger();
 		// tab container
 		setTabSelected(area, false);
 
@@ -618,6 +620,7 @@ public class EntityPageTopViewImpl extends Composite implements EntityPageTopVie
 	}
 	
 	private void addWikiPageWidget(SimplePanel container, EntityBundle bundle, String wikiPageId, final Synapse.EntityArea area) {
+		GWT.debugger();
 		wikiPageWidget.clear();
 		if (DisplayUtils.isWikiSupportedType(bundle.getEntity())) {
 			Widget wikiW = wikiPageWidget.asWidget();

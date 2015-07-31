@@ -43,6 +43,7 @@ import org.sagebionetworks.web.shared.exceptions.BadRequestException;
 import org.sagebionetworks.web.shared.exceptions.NotFoundException;
 import org.sagebionetworks.web.shared.exceptions.UnauthorizedException;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -126,6 +127,7 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 	@Override
 	public void configure(ActionMenuWidget actionMenu,
 			EntityBundle entityBundle, String wikiPageId, EntityUpdatedHandler handler) {
+		GWT.debugger();
 		this.entityBundle = entityBundle;
 		this.wikiPageId = wikiPageId;
 		this.entityUpdateHandler = handler;

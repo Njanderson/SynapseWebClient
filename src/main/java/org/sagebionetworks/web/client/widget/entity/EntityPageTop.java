@@ -23,6 +23,7 @@ import org.sagebionetworks.web.client.widget.table.TableRowHeader;
 import org.sagebionetworks.web.client.widget.table.v2.QueryTokenProvider;
 import org.sagebionetworks.web.shared.ProjectAreaState;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -85,7 +86,7 @@ public class EntityPageTop implements EntityPageTopView.Presenter, SynapseWidget
     	this.projectHeader = projectHeader;
     	this.area = area;
     	this.areaToken = areaToken;
-    	
+    	GWT.debugger();
     	String entityId = bundle.getEntity().getId();
     	boolean isTable = bundle.getEntity() instanceof TableEntity;
     	boolean isProject = entityId.equals(projectAreaState.getProjectId());
@@ -187,6 +188,7 @@ public class EntityPageTop implements EntityPageTopView.Presenter, SynapseWidget
 
 	@Override
 	public void gotoProjectArea(EntityArea area, EntityArea currentArea) {
+		GWT.debugger();
 		String entityId = projectHeader.getId();
 		String areaToken = null;
 		Long versionNumber = null;
@@ -214,6 +216,7 @@ public class EntityPageTop implements EntityPageTopView.Presenter, SynapseWidget
 
 	@Override
 	public boolean isPlaceChangeForArea(EntityArea targetTab) {
+		GWT.debugger();
 		boolean isProject = bundle.getEntity().getId().equals(projectAreaState.getProjectId());		
 		if(targetTab == EntityArea.ADMIN && !isProject) {
 			// admin area clicked outside of project requires goto
@@ -324,6 +327,7 @@ public class EntityPageTop implements EntityPageTopView.Presenter, SynapseWidget
 
 	@Override
 	public void handleWikiReload(String wikiPageId) {
+		GWT.debugger();
 		if (bundle.getEntity() instanceof Project) {
 			setArea(EntityArea.WIKI, wikiPageId);
 			view.configureProjectActionMenu(bundle, wikiPageId);
@@ -336,6 +340,7 @@ public class EntityPageTop implements EntityPageTopView.Presenter, SynapseWidget
 	 * Private Methods
 	 */
 	private void sendDetailsToView(Synapse.EntityArea area, String areaToken, EntityHeader projectHeader) {		
+		GWT.debugger();
 		ObjectSchema schema = schemaCache.getSchemaEntity(bundle.getEntity());
 		entityTypeDisplay = DisplayUtils.getEntityTypeDisplay(schema);
 		if (area == null && bundle.getEntity() instanceof Project) {

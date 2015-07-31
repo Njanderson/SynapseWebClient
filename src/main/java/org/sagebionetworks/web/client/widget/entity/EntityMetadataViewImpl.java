@@ -58,10 +58,11 @@ public class EntityMetadataViewImpl extends Composite implements EntityMetadataV
 	SimplePanel fileHistoryContainer;
 		
 	@UiField(provided = true)
-	IconsImageBundle icons;
+	final IconsImageBundle icons;
 	
 	@Inject
-	public EntityMetadataViewImpl() {
+	public EntityMetadataViewImpl(IconsImageBundle iconsImageBundle) {
+		this.icons = iconsImageBundle;
 		initWidget(uiBinder.createAndBindUi(this));
 		annotationsContainer.getElement().setAttribute("highlight-box-title", DisplayConstants.ANNOTATIONS);
 		fileHistoryContainer.getElement().setAttribute("highlight-box-title", "File History");
