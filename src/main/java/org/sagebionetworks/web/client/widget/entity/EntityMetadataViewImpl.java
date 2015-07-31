@@ -105,8 +105,9 @@ public class EntityMetadataViewImpl extends Composite implements EntityMetadataV
 	
 	@Override
 	public void getAndSetEntityIcon(Entity en) {
-		AbstractImagePrototype synapseIconForEntity = AbstractImagePrototype.create(DisplayUtils.getSynapseIconForEntity(en, DisplayUtils.IconSize.PX24, icons));
-		synapseIconForEntity.applyTo(entityIcon);
+		GWT.debugger();
+//		AbstractImagePrototype synapseIconForEntity = AbstractImagePrototype.create(DisplayUtils.getSynapseIconForEntity(en, DisplayUtils.IconSize.PX24, icons));
+//		synapseIconForEntity.applyTo(entityIcon);
 	}
 	
 	@Override

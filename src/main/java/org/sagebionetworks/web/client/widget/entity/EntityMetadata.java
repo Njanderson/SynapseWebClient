@@ -49,34 +49,34 @@ public class EntityMetadata implements Presenter {
 	public void setEntityBundle(EntityBundle bundle, Long versionNumber) {
 		GWT.debugger();
 		clear();
-		Entity en = bundle.getEntity();
-		boolean canEdit = bundle.getPermissions().getCanCertifiedUserEdit();
-		boolean showDetailedMetadata = true;
-		boolean showEntityName = true;
-		view.setEntityId(en.getId());
-		view.setEntityName(en.getName());
-		view.getAndSetEntityIcon(en);
-		if (bundle.getEntity() instanceof FileEntity) {
-			showEntityName = false;
-			fileHistoryWidget.setEntityBundle(bundle, versionNumber);
-			fileHistoryWidget.setEntityUpdatedHandler(entityUpdatedHandler);
-			view.setFileHistoryWidget(fileHistoryWidget);
-			view.setFileHistoryVisible(versionNumber != null);
-		} else {
-			view.setFileHistoryVisible(false);
-		}
-		restrictionWidget.configure(bundle, true, false, true, new Callback() {
-			@Override
-			public void invoke() {
-				fireEntityUpdatedEvent();
-			}
-		});
-		view.setRestrictionPanelVisible(restrictionWidget.asWidget() != null);
-		favoriteWidget.configure(bundle.getEntity().getId());
-		doiWidget.configure(bundle.getEntity().getId(), bundle.getPermissions().getCanCertifiedUserEdit(), versionNumber);
-		annotationsWidget.configure(bundle, canEdit);
-		view.setDetailedMetadataVisible(showDetailedMetadata);
-		view.setEntityNameVisible(showEntityName);		
+//		Entity en = bundle.getEntity();
+//		boolean canEdit = bundle.getPermissions().getCanCertifiedUserEdit();
+//		boolean showDetailedMetadata = true;
+//		boolean showEntityName = true;
+//		view.setEntityId(en.getId());
+//		view.setEntityName(en.getName());
+//		view.getAndSetEntityIcon(en);
+//		if (bundle.getEntity() instanceof FileEntity) {
+//			showEntityName = false;
+//			fileHistoryWidget.setEntityBundle(bundle, versionNumber);
+//			fileHistoryWidget.setEntityUpdatedHandler(entityUpdatedHandler);
+//			view.setFileHistoryWidget(fileHistoryWidget);
+//			view.setFileHistoryVisible(versionNumber != null);
+//		} else {
+//			view.setFileHistoryVisible(false);
+//		}
+//		restrictionWidget.configure(bundle, true, false, true, new Callback() {
+//			@Override
+//			public void invoke() {
+//				fireEntityUpdatedEvent();
+//			}
+//		});
+//		view.setRestrictionPanelVisible(restrictionWidget.asWidget() != null);
+//		favoriteWidget.configure(bundle.getEntity().getId());
+//		doiWidget.configure(bundle.getEntity().getId(), bundle.getPermissions().getCanCertifiedUserEdit(), versionNumber);
+//		annotationsWidget.configure(bundle, canEdit);
+//		view.setDetailedMetadataVisible(showDetailedMetadata);
+//		view.setEntityNameVisible(showEntityName);		
 	}	
 
 	@Override
