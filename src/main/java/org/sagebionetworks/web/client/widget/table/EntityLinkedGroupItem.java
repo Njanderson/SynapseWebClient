@@ -1,9 +1,11 @@
 package org.sagebionetworks.web.client.widget.table;
 
+import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.LinkedGroupItem;
 import org.gwtbootstrap3.client.ui.LinkedGroupItemText;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.sagebionetworks.repo.model.entity.query.EntityQueryResult;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,6 +26,7 @@ public class EntityLinkedGroupItem extends LinkedGroupItem {
 	
 	Heading heading;
 	LinkedGroupItemText text;
+	AnchorListItem anchor;
 	
 	EntityLinkedGroupItem(HeadingSize size, EntityQueryResult header, ClickHandler clickHandler){
 		this.heading = new Heading(size);
@@ -32,6 +35,10 @@ public class EntityLinkedGroupItem extends LinkedGroupItem {
 		this.text.setText(CREATED_ON+DATE_FORMAT.format(header.getCreatedOn()));
 		this.add(this.heading);
 		this.add(this.text);
+		anchor = new AnchorListItem();
+		anchor.setIcon(IconType.EXTERNAL_LINK);
+		anchor.setHref();
+		this.add(anchor);
 		this.addClickHandler(clickHandler);
 	}
 	
