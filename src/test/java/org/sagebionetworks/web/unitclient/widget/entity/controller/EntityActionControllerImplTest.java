@@ -63,6 +63,7 @@ import org.sagebionetworks.web.client.widget.entity.EvaluationSubmitter;
 import org.sagebionetworks.web.client.widget.entity.MarkdownEditorWidget;
 import org.sagebionetworks.web.client.widget.entity.RenameEntityModalWidget;
 import org.sagebionetworks.web.client.widget.entity.browse.EntityFinder;
+import org.sagebionetworks.web.client.widget.entity.controller.ACTEditorWidget;
 import org.sagebionetworks.web.client.widget.entity.controller.EntityActionControllerImpl;
 import org.sagebionetworks.web.client.widget.entity.controller.EntityActionControllerView;
 import org.sagebionetworks.web.client.widget.entity.controller.PreflightController;
@@ -94,6 +95,7 @@ public class EntityActionControllerImplTest {
 	RenameEntityModalWidget mockRenameEntityModalWidget;
 	EditFileMetadataModalWidget mockEditFileMetadataModalWidget;
 	EditProjectMetadataModalWidget mockEditProjectMetadataModalWidget;
+	ACTEditorWidget mockACTEditorWidget;
 	EntityFinder mockEntityFinder;
 	EvaluationSubmitter mockSubmitter;
 	UploadDialogWidget mockUploader;
@@ -124,7 +126,7 @@ public class EntityActionControllerImplTest {
 		mockRenameEntityModalWidget = Mockito.mock(RenameEntityModalWidget.class);
 		mockEditFileMetadataModalWidget = Mockito.mock(EditFileMetadataModalWidget.class);
 		mockEditProjectMetadataModalWidget = Mockito.mock(EditProjectMetadataModalWidget.class);
-		
+		mockACTEditorWidget = Mockito.mock(ACTEditorWidget.class);
 		mockAuthenticationController = Mockito
 				.mock(AuthenticationController.class);
 		mockMarkdownEditorWidget = Mockito.mock(MarkdownEditorWidget.class);
@@ -147,7 +149,7 @@ public class EntityActionControllerImplTest {
 				mockSynapseClient, mockGlobalApplicationState,
 				mockAuthenticationController, mockAccessControlListModalWidget,
 				mockRenameEntityModalWidget, mockEditFileMetadataModalWidget, mockEditProjectMetadataModalWidget,
-				mockEntityFinder, mockSubmitter, mockUploader,
+				mockACTEditorWidget, mockEntityFinder, mockSubmitter, mockUploader,
 				mockMarkdownEditorWidget, mockProvenanceEditorWidget, mockStorageLocationWidget);
 		
 		parentId = "syn456";

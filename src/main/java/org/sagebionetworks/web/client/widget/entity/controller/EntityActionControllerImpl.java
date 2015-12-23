@@ -81,6 +81,7 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 	EvaluationSubmitter submitter;
 	EditFileMetadataModalWidget editFileMetadataModalWidget;
 	EditProjectMetadataModalWidget editProjectMetadataModalWidget;
+	ACTEditorWidget actEditorWidget;
 	
 	EntityBundle entityBundle;
 	String wikiPageId;
@@ -105,6 +106,7 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 			RenameEntityModalWidget renameEntityModalWidget,
 			EditFileMetadataModalWidget editFileMetadataModalWidget,
 			EditProjectMetadataModalWidget editProjectMetadataModalWidget,
+			ACTEditorWidget actEditorWidget,
 			EntityFinder entityFinder,
 			EvaluationSubmitter submitter,
 			UploadDialogWidget uploader,
@@ -122,6 +124,7 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 		this.renameEntityModalWidget = renameEntityModalWidget;
 		this.editFileMetadataModalWidget = editFileMetadataModalWidget;
 		this.editProjectMetadataModalWidget = editProjectMetadataModalWidget;
+		this.actEditorWidget = actEditorWidget;
 		this.entityFinder = entityFinder;
 		this.submitter = submitter;
 		this.uploader = uploader;
@@ -175,6 +178,19 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 			configureCreateDOI();
 			configureEditProjectMetadataAction();
 			configureEditFileMetadataAction();
+			configureACTEditor();
+		}
+	}
+	
+	private void configureACTEditor() {
+		if (entityBundle.getEntity() instanceof Project) {
+				//&& authenticationController.getCurrentUserBundle().getIsACTMember()) {
+			actionMenu.setActionVisible(Action.EDIT_ACT, true);
+			actionMenu.setActionEnabled(Action.EDIT_ACT, true);
+			actionMenu.setActionListener(Action.EDIT_ACT, this);
+		} else {
+			actionMenu.setActionVisible(Action.EDIT_ACT, false);
+			actionMenu.setActionEnabled(Action.EDIT_ACT, false);
 		}
 	}
 	
@@ -498,6 +514,9 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 		case CHANGE_ENTITY_NAME:
 			onRename();
 			break;
+		case EDIT_ACT:
+			onEditACT();
+			break;
 		case EDIT_FILE_METADATA:
 			onEditFileMetadata();
 			break;
@@ -542,6 +561,11 @@ public class EntityActionControllerImpl implements EntityActionController, Actio
 		}
 	}
 	
+	private void onEditACT() {
+		// configure, then show the editor
+		actEditorWidget.configure(this.entityBundle);
+		actEditorWidget.show();
+	}
 
 	private void onChangeStorageLocation() {
 		storageLocationEditor.configure(this.entityBundle, entityUpdateHandler);

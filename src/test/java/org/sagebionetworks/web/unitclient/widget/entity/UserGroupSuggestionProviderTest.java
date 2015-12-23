@@ -27,7 +27,6 @@ public class UserGroupSuggestionProviderTest {
 
 	UserGroupSuggestionProvider presenter;
 	SynapseClientAsync mockSynapseClient;
-	SynapseJSNIUtils mockJSNI;
 	AsyncCallback<SynapseSuggestionBundle> mockCallback;
 	
 	int offset = 0;
@@ -40,8 +39,7 @@ public class UserGroupSuggestionProviderTest {
 	public void setup() {
 		mockCallback = mock(AsyncCallback.class);
 		mockSynapseClient = mock(SynapseClientAsync.class);
-		mockJSNI = mock(SynapseJSNIUtils.class);
-		presenter = new UserGroupSuggestionProvider(mockSynapseClient, mockJSNI);
+		presenter = new UserGroupSuggestionProvider(mockSynapseClient);
 	}
 	
 	@Test

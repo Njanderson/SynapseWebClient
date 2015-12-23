@@ -16,14 +16,12 @@ import com.google.inject.Inject;
 public class UserGroupSuggestionProvider implements SuggestionProvider {
 	
 	private SynapseClientAsync synapseClient;
-	private SynapseJSNIUtils jsniUtils;
 	// for rendering
 	private String width;
 	
 	@Inject
-	public UserGroupSuggestionProvider(SynapseClientAsync synapseClient, SynapseJSNIUtils jsniUtils) {
+	public UserGroupSuggestionProvider(SynapseClientAsync synapseClient) {
 		this.synapseClient = synapseClient;
-		this.jsniUtils = jsniUtils;
 	}
 	
 	@Override

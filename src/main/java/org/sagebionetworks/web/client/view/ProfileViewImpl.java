@@ -69,29 +69,28 @@ public class ProfileViewImpl extends Composite implements ProfileView {
 	SimplePanel header;
 	@UiField
 	SimplePanel footer;
-	
 	@UiField
-	 Div viewProfilePanel;
-	 @UiField
-	 Image certificationBadge;
-	 @UiField
-	 Heading displayNameField;
-	 @UiField
-	 Heading headlineField;
-	 @UiField
-	 Paragraph industryLocationField;
-	 @UiField
-	 Paragraph summaryField;
-	 @UiField
-	 org.gwtbootstrap3.client.ui.Anchor urlField;
-	 @UiField
-	 org.gwtbootstrap3.client.ui.Anchor orcIdField;
-	 @UiField
-	 Icon unbindButton;
-	 @UiField
-	 Span unbindButtonUI;
-	 @UiField
-	 TextBox synapseEmailField;
+	Div viewProfilePanel;
+	@UiField
+	Image certificationBadge;
+	@UiField
+	Heading displayNameField;
+	@UiField
+	Heading headlineField;
+	@UiField
+	Paragraph industryLocationField;
+	@UiField
+	Paragraph summaryField;
+	@UiField
+	org.gwtbootstrap3.client.ui.Anchor urlField;
+	@UiField
+	org.gwtbootstrap3.client.ui.Anchor orcIdField;
+	@UiField
+	Icon unbindButton;
+	@UiField
+	Span unbindButtonUI;
+	@UiField
+	TextBox synapseEmailField;
 	@UiField
 	Button editProfileButton;
 	@UiField
@@ -100,12 +99,10 @@ public class ProfileViewImpl extends Composite implements ProfileView {
 	Button importLinkedIn;
 	@UiField
 	SimplePanel editUserProfilePanel;
-	
 	@UiField
 	SimplePanel picturePanel;
 	@UiField
 	VerificationIDCardViewImpl idCard;
-	
 	//////Tabs
 	@UiField
 	Anchor projectsLink;

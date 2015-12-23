@@ -201,6 +201,8 @@ import org.sagebionetworks.web.client.widget.entity.browse.FilesBrowserViewImpl;
 import org.sagebionetworks.web.client.widget.entity.browse.MyEntitiesBrowser;
 import org.sagebionetworks.web.client.widget.entity.browse.MyEntitiesBrowserView;
 import org.sagebionetworks.web.client.widget.entity.browse.MyEntitiesBrowserViewImpl;
+import org.sagebionetworks.web.client.widget.entity.controller.ACTEditorWidgetView;
+import org.sagebionetworks.web.client.widget.entity.controller.ACTEditorWidgetViewImpl;
 import org.sagebionetworks.web.client.widget.entity.controller.AccessRequirementController;
 import org.sagebionetworks.web.client.widget.entity.controller.AccessRequirementControllerImpl;
 import org.sagebionetworks.web.client.widget.entity.controller.CertifiedUserController;
@@ -803,6 +805,9 @@ public class PortalGinModule extends AbstractGinModule {
 		bind(AccessControlListEditorView.class).to(AccessControlListEditorViewImpl.class);
 		bind(AccessControlListModalWidget.class).to(AccessControlListModalWidgetImpl.class);
 		bind(AccessControlListModalWidgetView.class).to(AccessControlListModalWidgetViewImpl.class);
+		
+		// ACT Editor
+		bind(ACTEditorWidgetView.class).to(ACTEditorWidgetViewImpl.class);
 		
 		bind(EvaluationAccessControlListModalWidget.class).to(EvaluationAccessControlListModalWidgetImpl.class);
 		

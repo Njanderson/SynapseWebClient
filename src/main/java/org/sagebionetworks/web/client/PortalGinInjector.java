@@ -52,6 +52,7 @@ import org.sagebionetworks.web.client.widget.entity.RegisterTeamDialog;
 import org.sagebionetworks.web.client.widget.entity.TutorialWizard;
 import org.sagebionetworks.web.client.widget.entity.annotation.AnnotationEditor;
 import org.sagebionetworks.web.client.widget.entity.browse.EntityTreeBrowser;
+import org.sagebionetworks.web.client.widget.entity.controller.ACTEditorWidget;
 import org.sagebionetworks.web.client.widget.entity.controller.EntityActionController;
 import org.sagebionetworks.web.client.widget.entity.controller.EntityRefProvEntryView;
 import org.sagebionetworks.web.client.widget.entity.controller.ProvenanceListWidget;
@@ -253,6 +254,7 @@ public interface PortalGinInjector extends Ginjector {
 	public BiodallianceEditor getBiodallianceEditor();
 	public BiodallianceSourceEditor getBiodallianceSourceEditor();
 	public CytoscapeConfigEditor getCytoscapeConfigEditor();
+	public ACTEditorWidget getACTEditorWidget();
 	
 	////// Renderers
 	public BookmarkWidget getBookmarkRenderer();
@@ -328,28 +330,20 @@ public interface PortalGinInjector extends Ginjector {
 		
 	// Asynchronous
 	public JobTrackingWidget creatNewAsynchronousProgressWidget();
-	
 	public UserTeamBadge getUserTeamBadgeWidget();
 	public TeamBadge getTeamBadgeWidget();
 	public BigTeamBadge getBigTeamBadgeWidget();
-	
 	public ChallengeBadge getChallengeBadgeWidget();
-	
 	public ProjectBadge getProjectBadgeWidget();
 	public EntityTreeItem getEntityTreeItemWidget();
 	public MoreTreeItem getMoreTreeWidget();
 	public UserGroupListWidget getUserGroupListWidget();
 	public UserGroupSuggestionProvider getUserGroupSuggestOracleImpl();
-	
 	public TableListWidget getTableListWidget();
 	public Uploader getUploaderWidget();
 	public CookieProvider getCookieProvider();
-
 	public BasicPaginationWidget createBasicPaginationWidget();
-
-
 	public KeyboardNavigationHandler createKeyboardNavigationHandler();
-
 	public SortableTableHeader createSortableTableHeader();
 	public StaticTableHeader createStaticTableHeader();
 	public EvaluationSubmitter getEvaluationSubmitter();
@@ -357,7 +351,6 @@ public interface PortalGinInjector extends Ginjector {
 	public AnnotationEditor getAnnotationEditor();
 	public FileHistoryRowView getFileHistoryRow();
 	public FileHistoryWidget getFileHistoryWidget();
-	
 	public JoinTeamConfigEditor getJoinTeamConfigEditor();
 	public ModifiedCreatedByWidget getModifiedCreatedByWidget();
 	public FileHandleLink getFileHandleLink();
